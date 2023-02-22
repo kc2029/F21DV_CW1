@@ -5,7 +5,7 @@
   <meta charset="UTF-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="css/styles.css">
   <script src='https://d3js.org/d3.v7.min.js'></script>
 
 
@@ -14,11 +14,19 @@
 </head>
 
 <body>
-  <svg id="covidmap" width="800" height="800"></svg>
+  <p>Welcome to Covid Analytics</p>
+
+  <div id="content">
+    <div class="info">Click to select country, double click to remove country</div>
+    <svg width="900px" height="900px">
+      <g class="map"></g>
+    </svg>
+  </div>
 
 
 </body>
 
-<script src="script.js"></script>
+<script src="js/script.js"></script>
+<!-- //<script src="js/csv.js"></script> -->
 
 </html>

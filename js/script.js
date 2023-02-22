@@ -11,8 +11,10 @@ let geoGenerator = d3.geoPath()
 function handleMouseClick(e, d) {
 
   //location.reload();
-  let currentCountry = d3.select('#content .info').text(d.properties.name)
-  console.log(currentCountry.text())
+  let currentCountry = d3.select('#content .info').text(d.properties.name)  //get selected country name
+  let country = currentCountry.text() //store selected country as string
+  console.log(country)
+
 
   const target = d3.select(this)
   if (target.style("fill") == "black") {
@@ -21,14 +23,15 @@ function handleMouseClick(e, d) {
     target.style("fill", "black");
   }
 
-  console.log()
-
+  // Testing function
+  // test()
+  //function test(){console.log(country)}
 }
 
 
-function redCanada() {
-  const country = d3.select('#content .info')
-}
+
+
+
 
 function update(geojson) {
 
@@ -40,8 +43,8 @@ function update(geojson) {
   u.enter()
     .append('path')
     .attr('d', geoGenerator)
-    //.on('mouseover', handleMouseover)
-    .on('click', handleMouseClick);
+    .on('click', handleMouseClick)
+
 
 }
 
@@ -50,4 +53,7 @@ function update(geojson) {
 
 // REQUEST DATA
 d3.json('data/geo.json')
-  .then(function (json) { update(json) });
+  .then(function (json) {
+    update(json)
+
+  });

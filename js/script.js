@@ -30,9 +30,6 @@ function handleMouseClick(e, d) {
 
 
 
-
-
-
 function update(geojson) {
 
 
@@ -52,8 +49,5 @@ function update(geojson) {
 
 
 // REQUEST DATA
-d3.json('data/geo.json')
-  .then(function (json) {
-    update(json)
-
-  });
+d3.json('data/geo.json').then(function (json) { update(json) });
+d3.csv('data/covid.csv').then(function (data) { console.log(data) });

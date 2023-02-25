@@ -1,14 +1,5 @@
-#content .map path {
-  fill: #aaa;
-  stroke: #fff;
-}
-
-#content .bounding-box rect {
-  fill: none;
-  stroke: #d9caca;
-  stroke-dasharray: 2, 1;
-}
-
-#content .centroid circle {
-  fill: red;
+/* worldmap stykung */
+#worldmap .map path {
+  fill: #c8c3c3;
+  stroke: #f7f6f9;
 }

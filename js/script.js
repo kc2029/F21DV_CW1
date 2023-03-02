@@ -135,28 +135,28 @@ Promise.all([
     // Group the data by date
     const gData = d3.group(loadData[2], d => d.date);
 
+
     function selectDate(day) {
       const selectedData = gData.get(day);
-      console.log(selectedData)
+
       svg.selectAll("path")
         .style("fill", "white")      // Set the initial fill color of each country based on the current data
         .transition()
         .duration(200)
         .style("fill", (d) => {
-
+          //console.log(selectedData[1][0])
           const cases = selectedData[0][d.properties.name];
           if (cases) {
             return colorScale(cases);
           } else {
             //how to
           }
-        }
+        });
 
+      // svg.selectAll("path")
+      // .date(selectedData[0][0])
+      // .join('text')
 
-
-
-
-        );
     }
 
     let defaultDate = "2021-01-15"

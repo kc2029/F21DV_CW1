@@ -28,6 +28,8 @@ Promise.all([
   let mainData = d3.group(loadData[1].filter(d => !d.iso_code.includes("OWID")), d => d.location);
   let cases__million = loadData[2];
 
+
+
   const maxValue = d3.max(loadData[1], d => +d.total_cases_per_million);
   const colorScale = d3.scaleSequential()
     .domain([0, d3.max(loadData[1], d => +d.total_cases_per_million)])
@@ -72,12 +74,13 @@ Promise.all([
     const countryName = d.properties.name;
 
     // Toggle the fill color of the clicked country
-    if (target.style("fill") === "black") {
-      target.style("fill", "");
+    if (target.style("fill") === "black") {  //If country is already black
+      target.style("fill", ""); //return the default color
       selectedCountries = selectedCountries.filter((country) => country !== countryName);
+      //remove country from the array of selected country with filter method
     } else {
       target.style("fill", "black");
-      selectedCountries.push(countryName);
+      selectedCountries.push(countryName);//if not add the country name into the array
     }
 
     // Update the list of selected countries in the HTML
@@ -92,6 +95,7 @@ Promise.all([
   let selectedCountries = [];
   // Get the selected country name and update the list of selected countries
   let currentCountry = d3.select('#worldmap .info').text("");
+
   d3.selectAll("path")
     .on("click", function (e, d) {
       handleMouseClick.call(this, e, d);
@@ -128,19 +132,34 @@ Promise.all([
 
   function weeklyCasesMillion() {
 
+    //finding 95th quantile
+    const n = cases__million.map(d => Object.values(d).slice(2).map(val => +val));
+    const q = n.flat()  //convert from object array to flat array
+    q.sort((a, b) => a - b)
+    const index = Math.round((q.length - 1) * 0.95 + 1)  //find 95th index
+    let quantile = Math.round(q[index])
+    console.log(quantile)
+
+    //color scale base on the 95th quantile to avoid skewed scale with outlier
     const colorScale = d3.scaleLinear()
-      .domain([0, 10000])
+      .domain([0, quantile])
       .range(["white", "red"])
+
+
 
     // Group the data by date
     const gData = d3.group(loadData[2], d => d.date);
 
 
+
+
     function selectDate(day) {
       const selectedData = gData.get(day);
+      // console.log(typeof day)
+      d3.select('#worldmap .displayDate').text(day)
 
       svg.selectAll("path")
-        .style("fill", "white")      // Set the initial fill color of each country based on the current data
+        .style("fill", "white")// Set the initial fill color of each country based on the current data
         .transition()
         .duration(200)
         .style("fill", (d) => {
@@ -152,60 +171,49 @@ Promise.all([
             //how to
           }
         });
-
-      // svg.selectAll("path")
-      // .date(selectedData[0][0])
-      // .join('text')
-
     }
 
     let defaultDate = "2021-01-15"
     let dateObj = new Date(defaultDate);
-    //const today = new Date()-60;
-    const today = new Date("2023-02-21"); //make a function t
+    const today = new Date("2023-02-21"); //make a function to get latest date instead
 
 
     function incrementDate() {
-
       while (dateObj < today) {
         setTimeout(incrementDate, 100)
         dateObj.setDate(dateObj.getDate() + 1);
-
-
-
-
         return selectDate(dateObj.toISOString().slice(0, 10)); //convert back to string
       }
     }
+    incrementDate()
 
-    incrementDate();
+
+    // Legend here
+    const LegendSvg = d3.select('.legend')
+
+
+
+    // Append a black rectangle to the SVG
+    svg.append('rect')
+      .attr('x', 0)
+      .attr('y', 0)
+      .attr('width', 100)
+      .attr('height', 300)
+      .attr('fill', 'black')
+      .attr("transform", "translate(800,300)");
+
+
+
+
 
 
 
 
   }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
   // Handle button click event
   d3.select("#start-transition").on("click", weeklyCasesMillion);
-
   d3.select("#start-transition2").on("click", latestCasesMillion);
-
-
-
-
 
 
 

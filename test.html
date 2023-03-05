@@ -14,14 +14,48 @@
 </head>
 
 <body>
-  <p>Welcome to Covid Analytics</p>
+  <p>Welcome to Covid Analytics Testing</p>
+  <svg id="a"></svg>
+  <svg id="b"></svg>
 
+  <div id="my_dataviz"></div>
 
 </body>
 
 <script>
 
-  d3.csv('data/testcovid.csv').then
+  // set the dimensions and margins of the graph
+  const margin = { top: 10, right: 100, bottom: 30, left: 30 },
+    width = 460 - margin.left - margin.right,
+    height = 400 - margin.top - margin.bottom;
+
+  // append the svg object to the body of the page
+  const svg = d3.select("#my_dataviz")
+    .append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+    .attr("transform", `translate(${margin.left},${margin.top})`);
+
+
+
+  d3.csv('data/testcovid.csv').then(function (data) {
+
+    d3.select("div")
+      .data(data, console.log(data))
+
+    //console.log(data)
+
+  });
+
+
+
+
+
+
+
+
+
 
 
 

@@ -1,5 +1,79 @@
 /* worldmap stykung */
+:root {
+  --seaColor: #03b0f4;
+  --mapDefaultColor: #29f600;
+}
+
 #worldmap .map path {
-  fill: #c8c3c3;
-  stroke: #f7f6f9;
+  fill: var(--mapDefaultColor);
+  stroke: #ffffff; /* Black outline to see better */
+}
+
+.mainMap {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  max-width: 750px;
+
+  /* border: 1px solid#000609; */
+  /* Set a fixed aspect ratio for the container */
+  /* In this example, the aspect ratio is 900:600 */
+}
+
+/* Set the SVG element to fill the container */
+.mainMap svg {
+  position: relative;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.info {
+  position: relative;
+  top: 60px;
+  right: 0px;
+  z-index: 1;
+  font-weight: bold;
+  background-color: #ffffff;
+  border-radius: 5px;
+  width: auto;
+  display: inline-block;
+  max-width: 200;
+}
+
+.displayDate {
+  position: relative;
+  top: 20px;
+  left: 10px;
+  z-index: 2;
+  font-weight: bold;
+
+  background-color: var(--seaColor);
+  width: 100px;
+  height: 10px;
+}
+
+.buttonLayout button {
+  display: inline-block;
+  width: auto;
+  font-size: 16px;
+  font-weight: bold;
+  background-color: #4caf50;
+  color: #f7f9f7;
+  border: none;
+  margin: 1px -1px;
+}
+
+/* .buttonLayout #refresh {
+
+} */
+body {
+  margin: 0;
+  padding: 0;
+  justify-content: center;
+}
+.mainDisplay {
+  max-width: 750px;
+  margin: 0 auto;
 }

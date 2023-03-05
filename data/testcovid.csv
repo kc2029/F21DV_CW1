@@ -1,9 +1,8 @@
-﻿Afghanistan,24/02/2020,0.122
+﻿location,date,cases
 Afghanistan,25/02/2020,0.122
 Afghanistan,26/02/2020,0.122
 Afghanistan,27/02/2020,0.122
 Afghanistan,28/02/2020,0.122
-Afghanistan,29/02/2020,0.122
 Afghanistan,01/03/2020,0.122
 Afghanistan,02/03/2020,0.122
 Afghanistan,03/03/2020,0.122
@@ -125,76 +124,3 @@ South Korea,15/02/2020,157.614
 South Korea,16/02/2020,183.438
 South Korea,17/02/2020,217.172
 South Korea,18/02/2020,250.715
-South Korea,19/02/2020,268.439
-South Korea,20/02/2020,285.973
-South Korea,21/02/2020,315.228
-South Korea,22/02/2020,334.287
-South Korea,23/02/2020,367.639
-South Korea,24/02/2020,389.842
-South Korea,25/02/2020,426.149
-South Korea,26/02/2020,437.107
-South Korea,27/02/2020,459.501
-South Korea,28/02/2020,478.083
-South Korea,29/02/2020,506.194
-South Korea,01/03/2020,530.685
-South Korea,02/03/2020,546.217
-South Korea,03/03/2020,555.651
-South Korea,04/03/2020,570.898
-South Korea,05/03/2020,577.378
-South Korea,06/03/2020,582.333
-South Korea,07/03/2020,592.339
-South Korea,08/03/2020,613.018
-South Korea,09/03/2020,624.071
-South Korea,10/03/2020,629.503
-South Korea,11/03/2020,642.844
-South Korea,12/03/2020,657.519
-South Korea,13/03/2020,670.193
-South Korea,14/03/2020,679.627
-South Korea,15/03/2020,684.868
-South Korea,16/03/2020,693.063
-South Korea,17/03/2020,700.591
-South Korea,18/03/2020,705.547
-South Korea,19/03/2020,709.454
-South Korea,20/03/2020,715.076
-South Korea,21/03/2020,722.223
-South Korea,22/03/2020,732.038
-South Korea,23/03/2020,737.279
-South Korea,24/03/2020,738.994
-South Korea,25/03/2020,741.472
-South Korea,26/03/2020,745.093
-South Korea,27/03/2020,752.431
-South Korea,28/03/2020,759.864
-South Korea,29/03/2020,765.295
-South Korea,30/03/2020,769.679
-South Korea,31/03/2020,771.394
-South Korea,01/04/2020,774.062
-South Korea,02/04/2020,779.113
-South Korea,03/04/2020,783.401
-South Korea,04/04/2020,787.975
-South Korea,05/04/2020,795.789
-South Korea,06/04/2020,801.03
-South Korea,07/04/2020,805.699
-South Korea,08/04/2020,807.605
-South Korea,09/04/2020,818.183
-South Korea,10/04/2020,823.995
-South Korea,11/04/2020,831.047
-South Korea,12/04/2020,834.192
-South Korea,13/04/2020,839.814
-South Korea,14/04/2020,847.152
-South Korea,15/04/2020,853.346
-South Korea,16/04/2020,857.824
-South Korea,17/04/2020,862.398
-South Korea,18/04/2020,865.829
-South Korea,19/04/2020,870.975
-South Korea,20/04/2020,876.311
-South Korea,21/04/2020,879.551
-South Korea,22/04/2020,883.172
-South Korea,23/04/2020,886.412
-South Korea,24/04/2020,892.32
-South Korea,25/04/2020,899.372
-South Korea,26/04/2020,904.708
-South Korea,27/04/2020,908.044
-South Korea,28/04/2020,911.665
-South Korea,29/04/2020,917.478
-South Korea,30/04/2020,924.053
-South Korea,01/05/2020,929.199

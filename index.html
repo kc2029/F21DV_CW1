@@ -15,26 +15,46 @@
 </head>
 
 <body>
+  <div class="mainDisplay">
+    <h1>Welcome to Covid Analytics 19</h1>
+    <p>Covid-19(SARS-CoV-2) is a contagious airborne virus infection that has swept through the globe over the last two
+      years with devastating effects on the world with hundreds of millions of cases of infections and millions of death
+      and long-term health effect</p>
+    <div>Select an option below</div>
+    <div class="buttonLayout">
+      <button id="refresh">Refresh</button>
+      <button id="start-transition">Weekly Cases(p.m)</button>
+      <button id="start-transition2">Latest Total Death(p.m)</button>
+      <button id="start-transitionBar">Compare Country</button>
+    </div>
+    <div class="mainMap">
 
-  <p>Welcome to Covid Analytics 19</p>
-
-  <div class="mainMap">
-    <div>Click the country to select</div>
-    <button id="start-transition">Weekly Cases(p.m) change through time</button>
-    <button id="start-transition2">Most recent cases per millions</button>
-
-    <div class="info"></div>
-
-    <div id="worldmap">
+      <p id="buttonInfo"></p>
       <div class="info"></div>
+      <div id="worldmap">
+        <div class="info"></div>
+        <div class="displayDate"></div>
+        <svg viewBox="0 0 900 600" preserveAspectRatio="xMidYMid meet">
+          <g class="map"></g>
+        </svg>
+        <svg id="legend"></svg>
+      </div>
+    </div>
+
+    <div id="barChart">
       <svg viewBox="0 0 900 600" preserveAspectRatio="xMidYMid meet">
-        <g class="map"></g>
       </svg>
     </div>
   </div>
 
 
 </body>
+
+<script>
+  document.getElementById("refresh").addEventListener("click", function () {
+    location.reload();
+  });
+</script>
 
 <script type="module" src="./js/script.js"></script>
 <!-- <script type="module" src="./js/casesOverTime.js"></script> -->

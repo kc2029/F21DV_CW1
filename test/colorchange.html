@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>cDocument</title>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+</head>
+
+<body>
+
+  <button id="start-transition">Start Transition</button>
+
+  <script>
+    // Set the dimensions of the SVG element
+    const width = 246 * 20;
+    const height = 400;
+
+    // Load the data from the CSV file
+    d3.csv("/data/covid.csv").then(function (data) {
+
+      // Group the data by location
+      const locations = d3.group(data.filter(d => !d.iso_code.includes("OWID")), d => d.location);
+
+      console.log(locations)
+
+      // Create the SVG element
+      const svg = d3.select("body")
+        .append("svg")
+        .attr("width", width)
+        .attr("height", height);
+
+      // Define the color scale for the cases
+      const colorScale = d3.scaleSequential()
+        .domain([0, d3.max(data, d => +d.total_deaths_per_million)])
+        .interpolator(d3.interpolateReds);
+
+      // Create a group for each location
+      const groups = svg.selectAll("g")
+        .data(locations)
+        .enter()
+        .append("g")
+        .attr("transform", function (d, i) {
+          const x = (i * 20) + 100;
+          return "translate(" + x + ", 200)";
+        });
+
+      // Add a circle and text element to each group
+      const circles = groups.append("circle")
+        .attr("cx", 0)
+        .attr("cy", 0)
+        .attr("r", 10)
+        .attr("stroke", "black")
+        .attr("fill", "white");
+
+      const texts = groups.append("text")
+        .attr("x", -50)
+        .attr("y", 5)
+        .attr("text-anchor", "end")
+        .attr("transform", "rotate(-90)");
+
+
+      function startTransition() {
+        circles.transition()
+          .duration(5000)
+          .tween("fill", function (d) {
+            const locationData = d[1];
+            const maxCases = d3.max(locationData, d => +d.total_deaths_per_million);
+            const interpolate = d3.interpolateRgb(colorScale(0), colorScale(maxCases));
+
+
+            // Update the text content during the transition
+            const text = texts.filter(function (e) { return e === d; });
+            const dates = locationData.map(d => d.date);
+
+            return function (t) {
+              d3.select(this).attr("fill", interpolate(t));
+              text.text(function (d) { return d[0]; });
+            };
+          });
+      }
+
+      // Handle button click event
+      d3.select("#start-transition").on("click", startTransition);
+
+    });
+
+  </script>
+</body>
+
+</html>

@@ -7,9 +7,13 @@ const svg = d3.select("#worldmap g.map"), //select the world map class
 const path = d3.geoPath(); // create a new path generator
 const projection = d3
   .geoMercator() // create a new Mercator projection
-  .scale(120)
-  .center([0, 5])
-  .translate([400, 400]); //offset
+  .scale(200)
+  .center([0, 0])
+  .translate([630, 700]); //offset
+
+//tooltips
+const rect = document.getElementById("textBox");
+rect.style.display = "none";
 
 //Data loading
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -133,6 +137,8 @@ Promise.all([
    * @date 05/03/2023 - 13:49:51
    */
   function latestDeathMillion() {
+    document.querySelector("#textBox").style.display = "block";
+
     d3.select("#buttonInfo").text("bye");
 
     let latestDeath = totalDeath[totalDeath.length - 1]; //load the CSV and get last row
@@ -170,10 +176,25 @@ Promise.all([
    *
    */
   function weeklyCasesMillion() {
-    d3.select("#buttonInfo").text(
+    d3.select("#buttonInfo").html(
       "Below is a time series graph depicting the weekly cases " +
-      "per million for each country, we can see the spread of the " +
-      "virus and how well each country deals with the virus based on the colour.".trim());
+      "per million for each country to illustrate the spread of the " +
+      "virus and how well each country deals with the virus based on the colour. " +
+
+      "<br>" +
+      "<br>When the record first began at Janury 2020, Cases was relatively low, with US, africa countries and Russia leading in cases," +
+      "this is likely due to the strict when Coid-19 quanrantine rules was rolled out in most country" +
+
+      "<br>" +
+      "<br>Cases remain relatively stable till around 2020 November which a explosion of case can be observed especially in the upper hemeisphere," +
+
+
+      "<br>" +
+      "<br>Cases start to lower after winter 2020, and remain low till novmber 2021, where case exploded due to even more infectious Omicron strand is detected  " +
+      "However due to the much less serve nature of Omicron and vaccine, Most country stop testing and recording"
+
+    );
+
 
     //finding 95th quantile
     const n = cases__million.map((d) =>
@@ -218,7 +239,7 @@ Promise.all([
         });
     }
 
-    let defaultDate = "2021-01-15";
+    let defaultDate = "2020-01-15";
     let dateObj = new Date(defaultDate);
     const today = new Date("2023-02-21"); //make a function to get latest date instead
 

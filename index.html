@@ -5,6 +5,9 @@
   <meta charset="UTF-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css"
+    integrity="sha512-NhSC1YmyruXifcj/KFRWoC561YpHpc5Jtzgvbuzx5VozKpWvQ+4nXhPdFgmx8xqexRcpAglTj9sIBWINXa8x5w=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
   <link rel="stylesheet" href="css/styles.css">
 
   <script src='https://d3js.org/d3.v7.min.js'></script>
@@ -34,17 +37,21 @@
       <div id="worldmap">
         <div class="info"></div>
         <div class="displayDate"></div>
-        <svg viewBox="0 0 900 600" preserveAspectRatio="xMidYMid meet">
+        <svg viewBox="0 0 1980 1080" preserveAspectRatio="xMidYMid meet">
           <g class="map"></g>
+          <rect id="textBox">
+            <title>Text Area</title>
+          </rect>
         </svg>
         <svg id="legend"></svg>
       </div>
     </div>
 
     <div id="barChart">
-      <svg viewBox="0 0 900 600" preserveAspectRatio="xMidYMid meet">
-      </svg>
+      <svg viewBox="0 0 900 600" preserveAspectRatio="xMidYMid meet"></svg>
     </div>
+
+
   </div>
 
 

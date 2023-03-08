@@ -3,17 +3,20 @@
   --seaColor: #03b0f4;
   --mapDefaultColor: #29f600;
 }
-
+#buttonLayout {
+  margin: 0;
+}
 #worldmap .map path {
   fill: var(--mapDefaultColor);
   stroke: #ffffff; /* Black outline to see better */
+  margin: 0;
 }
 
 .mainMap {
   position: relative;
   width: 100%;
   height: 100%;
-  max-width: 750px;
+  max-width: 1080px;
 
   /* border: 1px solid#000609; */
   /* Set a fixed aspect ratio for the container */
@@ -31,7 +34,7 @@
 
 .info {
   position: relative;
-  top: 60px;
+  /* top: 0px; */
   right: 0px;
   z-index: 1;
   font-weight: bold;
@@ -39,7 +42,7 @@
   border-radius: 5px;
   width: auto;
   display: inline-block;
-  max-width: 200;
+  /* max-width: 200; */
 }
 
 .displayDate {
@@ -71,9 +74,33 @@
 body {
   margin: 0;
   padding: 0;
-  justify-content: center;
+  /* justify-content: center; */
 }
 .mainDisplay {
-  max-width: 750px;
+  max-width: 1080px;
   margin: 0 auto;
+}
+
+.barChart {
+  margin: 0%;
+}
+
+.selected-line {
+  stroke-width: 8;
+  outline-color: black;
+  outline-width: 3;
+}
+
+.textBox {
+  display: none;
+
+  width: 100px;
+  height: 100px;
+  opacity: 100;
+  position: relative;
+  top: 0;
+  left: 0;
+  color: "black";
+  background: rgb(24, 162, 79);
+  z-index: 99;
 }

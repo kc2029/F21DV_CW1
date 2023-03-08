@@ -13,7 +13,7 @@ const projection = d3
 
 //tooltips
 const rect = document.getElementById("textBox");
-rect.style.display = "none";
+console.log(rect)
 
 //Data loading
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -321,7 +321,13 @@ Promise.all([
       .text("No Record");
   }
 
+
+  function combine() {
+    weeklyCasesMillion();
+    bar.bar();
+  }
+
   // Handle button click event
-  d3.select("#start-transition").on("click", weeklyCasesMillion);
+  d3.select("#start-transition").on("click", combine);
   d3.select("#start-transition2").on("click", latestDeathMillion);
 });

@@ -18,6 +18,8 @@
 </head>
 
 <body>
+
+
   <div class="mainDisplay">
     <h1>Welcome to Covid Analytics 19</h1>
     <p>Covid-19(SARS-CoV-2) is a contagious airborne virus infection that has swept through the globe over the last two
@@ -30,14 +32,18 @@
       <button id="start-transition2">Latest Total Death(p.m)</button>
       <button id="start-transitionBar">Compare Country</button>
     </div>
-    <div class="mainMap">
 
+    <div class="mainMap">
       <p id="buttonInfo"></p>
       <div class="info"></div>
+      <g id="barChart">
+        <!-- <svg viewBox="0 0 900 600" preserveAspectRatio="xMidYMid meet"></svg> -->
+      </g>
       <div id="worldmap">
         <div class="info"></div>
         <div class="displayDate"></div>
         <svg viewBox="0 0 1980 1080" preserveAspectRatio="xMidYMid meet">
+
           <g class="map"></g>
           <rect id="textBox">
             <title>Text Area</title>
@@ -47,9 +53,7 @@
       </div>
     </div>
 
-    <div id="barChart">
-      <svg viewBox="0 0 900 600" preserveAspectRatio="xMidYMid meet"></svg>
-    </div>
+
 
 
   </div>

@@ -1,137 +1,134 @@
 d3.select("#start-transitionBar").on("click", bar);
 
-
-
-
-
+let selectedLines = null;
 
 function bar() {
+  d3.select("#buttonInfo").text(
+    "Below is a line chart showing the total death from covid"
+  );
 
-  d3.select("#buttonInfo").text("barrr");
-
-
-  const margin = { top: 20, right: 20, bottom: 30, left: 50 };
-  const width = 900 - margin.left - margin.right;
-  const height = 600 - margin.top - margin.bottom;
-
-
-  const svg = d3.select('#barChart svg')
-    .append('svg')
-    .attr('width', width + margin.left + margin.right)
-    .attr('height', height + margin.top + margin.bottom)
-    .append('g')
-    .attr("transform", `translate(${margin.left},${margin.top})`);
+  const svg = d3.selectAll("#barChart");
+  d3.select("#barChart svg").remove();
 
   //Get the selected country and save as array
-  let currentC = d3.select('#worldmap .info').text().trim();
-  let countrylist = currentC.split(',').map(d => d.trim());
+  let currentC = d3.select("#worldmap .info").text().trim();
+  let countrylist = currentC.split(",").map((d) => d.trim());
 
-  d3.csv('/data/CovidRate.csv').then(data => {
-    // Extract the unique names from the CSV file
-    //const names = Array.from(new Set(data.map(d => d.location)));
-    names = countrylist
-    console.log(countrylist)
-
+  d3.csv("/data/CovidRate.csv").then((data) => {
+    names = countrylist;
+    console.log(countrylist);
+    console.log("name " + typeof countrylist)
     //names = ['China', 'Russia', 'United States', 'Canada', 'United Kingdom'] //for testing
 
-    const margin = { top: 20, right: 150, bottom: 10, left: 50 };
-    const width = 700 - margin.left - margin.right;
+    const margin = { top: 100, right: 150, bottom: 100, left: 50 };
+    const width = 900 - margin.left - margin.right;
     const height = 600 - margin.top - margin.bottom;
 
     // Create the SVG container
-    const svg = d3.select('#barChart')
-      .append('svg')
-      .attr('width', width + margin.left + margin.right)
-      .attr('height', height + margin.top + margin.bottom)
-      .append('g')
-      .attr('transform', `translate(${margin.left}, ${margin.top})`);
+    const svg = d3
+      .select("#barChart")
+
+      .append("svg")
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom)
+      .append("g")
+      .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
     // Define the date parsing function
     const parser = d3.timeParse("%Y-%m-%d");
 
     // Parse the date values
-    data.forEach(d => {
+    data.forEach((d) => {
       d.date = parser(d.date);
     });
 
     // Create the x-axis scale
-    const xScale = d3.scaleTime()
-      .domain(d3.extent(data, d => d.date))
+    const xScale = d3
+      .scaleTime()
+      .domain(d3.extent(data, (d) => d.date))
       .range([0, width]);
 
+    function ydomain() {
+      const maxV = [];
+      names.forEach((country) => {
+        const filteredData = data.filter((d) => d.location === country && d.total_deaths !== '');
+        const maxDeaths = Math.max(...filteredData.map((d) => Number(d.total_deaths)));
+        maxV.push(maxDeaths);
+        console.log(`The maximum total deaths in ${country} is ${maxDeaths}`);
+
+      });
+      console.log("soup" + d3.max(maxV))
+
+      return d3.max(maxV)
+    }
+    ydomain()
+
     // Create the y-axis scale
-    const yScale = d3.scaleLinear()
-      .domain([0, 1000000])//d3.max(data, d => +d.total_deaths)
+    const yScale = d3
+      .scaleLinear()
+      .domain([0, ydomain()]) //d3.max(data, d => +d.total_deaths)
       .range([height, 0]);
 
     // Create the x-axis
-    const xAxis = d3.axisBottom(xScale).ticks(6);
+    const xAxis = d3.axisBottom(xScale).ticks(10);
 
     // Create the y-axis
-    const yAxis = d3.axisLeft(yScale).ticks(10);
+    const yAxis = d3.axisLeft(yScale).ticks(20);
 
     // Add the x-axis to the chart
-    svg.append('g')
-      .attr('transform', `translate(0, ${height})`)
-      .call(xAxis);
+    svg.append("g").attr("transform", `translate(0, ${height})`).call(xAxis);
 
     // Add the y-axis to the chart
-    svg.append('g')
-      .call(yAxis);
+    svg.append("g").call(yAxis);
 
     // Create a color scale for the lines
     const colorScale = d3.scaleOrdinal(d3.schemeCategory10);
 
+
     // Loop through each name and add the line to the chart
     names.forEach((name, i) => {
-      const nameData = data.filter(d => d.location === name);
-      const line = d3.line()
-        .x(d => xScale(d.date))
-        .y(d => yScale(+d.total_deaths));
+      const nameData = data.filter((d) => d.location === name);
+      const line = d3
+        .line()
+        .x((d) => xScale(d.date))
+        .y((d) => yScale(+d.total_deaths));
 
-
-      svg.append('path')
+      svg
+        .append("path")
         .datum(nameData)
-        .attr('fill', 'none')
-        .attr('stroke', colorScale(i))
-        .attr('stroke-width', 1.5)
-        .attr('d', line)
-        .on('click', function () {
+        .attr("fill", "none")
+        .attr("stroke", colorScale(i))
+        .attr("stroke-width", 1.5)
+        .attr("d", line)
+        .on("click", function () {
+          // Remove the 'selected-line' class from all lines
+          d3.selectAll("#barChart path").classed("selected-line", false);
+
+          // Add the 'selected-line' class to the clicked line
+          d3.select(this).classed("selected-line", true);
           selectedLines = name;
-          console.log(selectedLines)
-        });   //selectedLines = name;
-      //      //console.log(selectedLines)
+          console.log(selectedLines);
+        });
 
-      // function handleMouseClick(name){
-      //     //const target = d3.select(this);
-      //     const countryName2 = name
-      //      console.log(countryName2);
-
-      // }
-
-      // Add a text label for the line
       const lastDataPoint = nameData[nameData.length - 1];
-      svg.append('text')
-        .attr('x', xScale(lastDataPoint.date) + 5)
-        .attr('y', yScale(lastDataPoint.total_deaths))
-        .attr('font-size', '12px')
+      const MaxD2 = d3.max(
+        nameData.filter((d) => d.location === lastDataPoint.location),
+        (d) => d.total_deaths
+      ); // calculate the maximum value of `total_deaths` only for the rows corresponding to `lastDataPoint.location`
+      console.log(MaxD2);
+
+      svg
+        .append("text")
+        .attr("x", xScale(lastDataPoint.date) + 5) // X-coordinate is XScale(date)
+        .attr("y", yScale(lastDataPoint.total_deaths))
+        // X-coordinate is yScale(total_Death)
+        .attr("font-size", "12px")
         .text(name);
     });
-
-    let selectedLines = null;
-
-
-
   });
-
-
-
-
-
-
-
-
-
-
-
 }
+
+//new chart here
+// function selectedCountry(selcountry) {
+//   console.log("heyyo " + selcountry)
+// }

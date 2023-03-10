@@ -81,21 +81,6 @@ body {
   margin: 0 auto;
 }
 
-.barChart {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 9999;
-  background-color: white;
-  border: 1px solid black;
-  padding: 20px;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
-  max-width: 80%;
-  max-height: 80%;
-  overflow: auto;
-}
-
 .selected-line {
   stroke-width: 8;
   outline-color: black;
@@ -124,4 +109,35 @@ body {
   width: 0px;
   height: 0px;
   animation: none;
+}
+
+.tooltip {
+  z-index: 999;
+}
+
+#barChart svg {
+  width: 90%;
+  height: 90%;
+
+  /* transform: scale(0.5); */
+}
+
+/* enable or disable this for floating window */
+#barChart {
+  display: none;
+  /* width: 90%;
+  height: 80%;
+  position: fixed;
+  top: 50%;
+  left: 70%;
+  z-index: 9999;
+  background-color: white;
+  border: 1px solid black;
+  padding: 1px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.8);
+  max-width: auto;
+  max-height: auto;
+  overflow: auto;
+  cursor: move;
+  transform: translate(-50%, -50%) scale(0.3); */
 }

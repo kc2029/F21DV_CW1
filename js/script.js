@@ -1,3 +1,4 @@
+let worldMap;
 // The svg
 const svg = d3.select("#worldmap g.map"), //select the world map class
   width = +svg.attr("width"),
@@ -24,16 +25,21 @@ Promise.all([
     "https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/cases_deaths/biweekly_cases_per_million.csv"
   ),
 ]).then(function (loadData) {
-  // load the datasets
+
+
+
+  // load the datasets into variables
   let geoData = loadData[0];
   let totalDeath = loadData[1];
-  //let mainData = d3.group(loadData[1].filter(d => !d.iso_code.includes("OWID")), d => d.location);
   let cases__million = loadData[2];
 
+
+  //sort the geoData
   const sortedGeo = geoData.features.sort((a, b) =>
     d3.ascending(a.properties.name, b.properties.name)
   );
 
+  //append svg for the background
   svg
     .append("rect")
     .attr("width", "100%")
@@ -47,7 +53,8 @@ Promise.all([
     .data(sortedGeo)
     .join("path")
     .attr("d", path.projection(projection))
-    // fill color based on cases
+    .attr("id", function (d) { return d.properties.name.replace(/\s+/g, "_") })
+    .attr("class", function (d) { return "country" })
     .attr("fill", "")
     .on("click", handleMouseClick);
 
@@ -137,17 +144,22 @@ Promise.all([
    * @date 05/03/2023 - 13:49:51
    */
   function latestDeathMillion() {
+    document.getElementById("barChart").style.display = "none";
+
     document.querySelector("#textBox").style.display = "block";
 
-    d3.select("#buttonInfo").text("bye");
+
 
     let latestDeath = totalDeath[totalDeath.length - 1]; //load the CSV and get last row
     let index = totalDeath.length - 1;
     let deathValues = Object.values(latestDeath) //ignore first two column(date and world) and sort
       .slice(2)
       .sort((a, b) => a - b); //sort acscending
-    //let deathValues2 = deathValues.filter((value) => value); unnessary, not quantile
+
     let maxTotalDeath = d3.max(deathValues);
+    console.log("maxxxxx " + maxTotalDeath)
+
+
 
     let colorScale = palette(0, maxTotalDeath); //return color between 0 and maxTotalDeath
     console.log(latestDeath);
@@ -168,6 +180,9 @@ Promise.all([
         }
       });
 
+    d3.select("#buttonInfo").text("This Chart display the latest total death per millions from Covid," +
+      "The globally the max death per million is " + Math.round(maxTotalDeath) + ". Interestingly, while majority of country share similar value except those in Africa and Asia," +
+      " This could be African countries is under reported as they dont have the means to keep a proper record");
     createLegend(svg, colorScale);
     // console.log(totalDeath)
   }
@@ -176,6 +191,8 @@ Promise.all([
    *
    */
   function weeklyCasesMillion() {
+    document.getElementById("barChart").style.display = "none";
+
     d3.select("#buttonInfo").html(
       "Below is a time series graph depicting the weekly cases " +
       "per million for each country to illustrate the spread of the " +
@@ -273,7 +290,8 @@ Promise.all([
     const legendContainer = svg
       .append("g")
       .attr("class", "legend")
-      .attr("transform", "translate(5,280)");
+      .attr("transform", "translate(5,780)")
+
 
     const legend = legendContainer
       .selectAll(".legend")
@@ -322,12 +340,13 @@ Promise.all([
   }
 
 
-  function combine() {
-    weeklyCasesMillion();
-    bar.bar();
-  }
+
 
   // Handle button click event
-  d3.select("#start-transition").on("click", combine);
+  d3.select("#start-transition").on("click", weeklyCasesMillion);
   d3.select("#start-transition2").on("click", latestDeathMillion);
 });
+
+
+
+//export { geoData };

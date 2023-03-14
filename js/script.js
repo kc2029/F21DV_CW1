@@ -19,9 +19,9 @@ console.log(rect);
 //Data loading
 ////////////////////////////////////////////////////////////////////////////////////////////
 Promise.all([
-  d3.json("./data/geo.json"), // load the geojson file
-  d3.csv("./data/total_deaths_per_million.csv"), // load the CSV file that contains COVID-19 data for each country
-  d3.csv("./data/biweekly_cases_per_million.csv"),
+  d3.json("https://raw.githubusercontent.com/kc2029/F21DV_CW1/main/data/geo.json?token=GHSAT0AAAAAAB66QAXCPAA7AMGMRJ6ZR5QMZAQLAWQ"), // load the geojson file
+  d3.csv("https://raw.githubusercontent.com/kc2029/F21DV_CW1/main/data/weekly_deaths_per_million.csv?token=GHSAT0AAAAAAB66QAXDPYZ3RM3GYQDPC754ZAQLH6Q"), // load the CSV file that contains COVID-19 data for each country
+  d3.csv("https://raw.githubusercontent.com/kc2029/F21DV_CW1/main/data/total_deaths_per_million.csv?token=GHSAT0AAAAAAB66QAXDJL42FWFZWRX2PYWGZAQLCAQ"),
 ]).then(function (loadData) {
   // load the datasets into variables
   let geoData = loadData[0];
@@ -492,14 +492,17 @@ Promise.all([
       const height = 600 - margin.top - margin.bottom;
 
       // Remove existing SVG container
-      //d3.select("#countryChart svg").remove();
+      d3.select("#countryChart svg").remove();
 
       const svgID = `countryChart-${DDcountry}-svg`;
 
       // Create the SVG container
       console.log(svgID)
+
       let svg = d3
-        .select("#countryChart").append('div')
+        .select("#countryChart")
+        // .attr("id", `#${svgID}`)
+        // .attr("class", "countryC")
         .append("svg")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
@@ -507,14 +510,14 @@ Promise.all([
         .attr("id", `#${svgID}`)
         .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
-      svg
-        .append("svg")
-        .attr("class", "countryC")
-        //.attr("id", `#${svgID}`)
-        .attr("width", 500)
-        .attr("height", 500)
-        .attr("fill", "red")
-        .append("g");
+      // svg
+      //   .append("svg")
+      //   //.attr("class", "countryC")
+      //   .attr("id", `#${svgID}`)
+      //   .attr("width", 500)
+      //   .attr("height", 500)
+      //   .attr("fill", "red")
+      //   .append("g");
       //.attr("transform", `translate(${margin.left}, ${margin.top})`);
 
       svg
@@ -530,7 +533,7 @@ Promise.all([
       svg
         .append("text")
         .attr("x", 20)
-        .attr("y", 20)
+        .attr("y", 25)
         .style("font-weight", "bold")
         .style("font-size", "45px")
         .text(DDcountry);
@@ -570,6 +573,7 @@ Promise.all([
       const projection = d3.geoMercator().fitSize([250, 250], geoCountry[0]);
 
       svg
+
         .append("g")
         .attr("x", 130)
         .attr("y", 150)

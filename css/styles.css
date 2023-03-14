@@ -237,3 +237,13 @@ body {
   resize: both;
   transform: translate(-50%, -50%) scale(0.5);
 }
+
+.logo {
+  animation: logo rotation 5s linear infinite;
+}
+
+@keyframes logo {
+  to {
+    transform: rotate(359deg);
+  }
+}

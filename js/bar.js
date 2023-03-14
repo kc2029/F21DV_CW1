@@ -1,6 +1,6 @@
-d3.select("#start-transitionBar").on("click", bar);
+d3.select("#start-transitionBar").on("click", lineChart);
 
-// Create close button element
+// Create close button
 const closeButton = document.createElement("button");
 closeButton.textContent = "Close";
 barChart.appendChild(closeButton); //add the button to barChart
@@ -10,56 +10,79 @@ closeButton.addEventListener("click", () => {
   barChart.style.display = "none";
 });
 
-//drag and pan event
-const chart = document.getElementById("barChart");
-let isDragging = false;
-let startX, startY, translateX, translateY;
 
-chart.addEventListener("mousedown", (e) => {
-  isDragging = true;
-  startX = e.clientX;
-  startY = e.clientY;
-  translateX = parseFloat(
-    window.getComputedStyle(chart).getPropertyValue("transform").split(", ")[4]
-  );
-  translateY = parseFloat(
-    window.getComputedStyle(chart).getPropertyValue("transform").split(", ")[5]
-  );
-});
 
-chart.addEventListener("mousemove", (e) => {
-  if (isDragging) {
-    const deltaX = e.clientX - startX;
-    const deltaY = e.clientY - startY;
+function pan(chartID) {
 
-    chart.style.transform = `translate(${translateX + deltaX}px, ${translateY + deltaY
-      }px)scale(0.6)`;
-  }
-});
 
-chart.addEventListener("mouseup", () => {
-  isDragging = false;
-});
+  const chart = document.getElementById(chartID);
+  //  const linePan = document.getElementById("linePan");
+
+  let isDragging = false;
+  let startX, startY, translateX, translateY;
+
+  chart.addEventListener("mousedown", (e) => {
+    isDragging = true;
+    startX = e.clientX;
+    startY = e.clientY;
+    translateX = parseFloat(
+      window
+        .getComputedStyle(chart)
+        .getPropertyValue("transform")
+        .split(", ")[4]
+    );
+    translateY = parseFloat(
+      window
+        .getComputedStyle(chart)
+        .getPropertyValue("transform")
+        .split(", ")[5]
+    );
+  });
+
+  chart.addEventListener("mousemove", (e) => {
+    if (isDragging) {
+      const deltaX = e.clientX - startX;
+      const deltaY = e.clientY - startY;
+
+      chart.style.transform = `translate(${translateX + deltaX}px, ${translateY + deltaY
+        }px)scale(0.6)`;
+    }
+  });
+
+  chart.addEventListener("mouseup", () => {
+    isDragging = false;
+  });
+}
+
+
+
+pan("barChart");
+pan("countryChart")
+
+
+
+
+
+
+
+
+
+
+//cal all chart require
+//pan("barChart");
+
 
 let selectedLines = null;
 
-function bar() {
-  // const tooltip = d3.select("body")
-  //   //d3.select("body")
-  //   .append("div")
-  //   .style("opacity", 0)
-  //   .attr("class", "tooltip")
-  //   .style("background-color", "black")
-  //   .style("border", "solid")
-  //   .style("border-width", "100px")
-  //   .style("border-radius", "50px")
-  //   .style("padding", "20px")
-
+/**
+ * Description placeholder
+ * @date 12/03/2023 - 13:54:36
+ */
+function lineChart() {
+  clusterInfo.style.display = "none";
+  buttonInfo.style.display = "block";
   const mousemove = function (event, d) {
-    // tooltip
-    //   .html(`The exact value ofsdss`)
-    //   .style("left", (event.x) / 2 + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
-    //   .style("top", (event.y) / 2 + "px")
+
   };
 
   const mouseover = function (event, d) {
@@ -78,7 +101,9 @@ function bar() {
   // add code to create and update the bar chart here
 
   d3.select("#buttonInfo").text(
-    "Below is a line chart showing the total death from covid"
+    "Select all the country you wish to compare to see how they fared againest Coivd-19" +
+    "For example comparing UK to other European country" +
+    "you can also hover over the line to see the total death number and where the country is on the world map"
   );
 
   const svg = d3.selectAll("#barChart");
@@ -90,8 +115,8 @@ function bar() {
 
   d3.csv("/data/CovidRate.csv").then((data) => {
     names = countrylist;
-    console.log(countrylist);
-    console.log("name " + typeof countrylist);
+    //console.log(countrylist);
+    //console.log("name " + typeof countrylist);
     //names = ['China', 'Russia', 'United States', 'Canada', 'United Kingdom'] //for testing
 
     const margin = { top: 10, right: 10, bottom: 100, left: 80 };
@@ -107,6 +132,29 @@ function bar() {
       .attr("height", height + margin.top + margin.bottom)
       .append("g")
       .attr("transform", `translate(${margin.left}, ${margin.top})`);
+
+    var panL = svg.append("g");
+
+    panL.append("rect")
+      .attr("id", "linePan")
+      .attr("width", 50)
+      .attr("height", 50)
+      .attr("x", 20)
+      .attr("y", 0)
+      .attr("fill", "lightgrey");
+
+    panL.append("text")
+      .attr("x", 30)
+      .attr("y", 25)
+      .style("font-weight", "bold")
+      .style("font-size", "15px")
+      .text("PAN");
+
+
+    panL.on("mousedown", function (e) {
+      console.log("here");
+    });
+
 
     // Define the date parsing function
     const parser = d3.timeParse("%Y-%m-%d");
@@ -134,9 +182,9 @@ function bar() {
           ...filteredData.map((d) => Number(d.total_deaths))
         );
         maxV.push(maxDeaths); //store each value in an array
-        console.log(`The maximum total deaths in ${country} is ${maxDeaths}`);
+        //console.log(`The maximum total deaths in ${country} is ${maxDeaths}`);
       });
-      console.log("soup" + d3.max(maxV));
+      //console.log("soup" + d3.max(maxV));
 
       return d3.max(maxV); //return max value of array
     }
@@ -160,11 +208,33 @@ function bar() {
     // Add the y-axis to the chart
     svg.append("g").call(yAxis);
 
+    // Add X axis label:
+    svg
+      .append("text")
+      .attr("text-anchor", "end")
+      .attr("x", width / 2 + margin.left)
+      .attr("y", height + margin.top + 50)
+      .style("font-weight", "bold")
+      .style("font-size", "25")
+
+      .text("Time-Line");
+
+    // Y axis label:
+    svg
+      .append("text")
+      .attr("text-anchor", "end")
+      .attr("transform", "rotate(-90)")
+      .attr("y", -margin.left + 30)
+      .attr("x", -margin.top - height / 2 + 20)
+      .style("font-weight", "bold")
+      .style("font-size", "25")
+      .text("Total death");
+
     // Create a color scale for the lines
     const colorScale = d3.scaleOrdinal(d3.schemeCategory10);
 
     let selectedLines = "";
-    console.log("export" + selectedLines);
+    //console.log("export" + selectedLines);
     // Loop through each name and add the line to the chart
     names.forEach((name, i) => {
       const nameData = data.filter((d) => d.location === name);
@@ -236,6 +306,15 @@ function bar() {
         // X-coordinate is yScale(total_Death)
         .attr("font-size", "12px")
         .text(name);
+
+
+      // Append a title label to the chart
+      svg.append("text")
+        .attr("x", width / 2 - 120)
+        .attr("y", margin.top / 2 + 20)
+        .attr("text-anchor", "middle")
+        .style("font-size", "24px")
+        .text("Comparison of total death of countries");
     });
   });
 

@@ -115,18 +115,83 @@ body {
   z-index: 999;
 }
 
-#barChart svg {
-  width: 90%;
-  height: 90%;
-
-  /* transform: scale(0.5); */
-}
-
 /* enable or disable this for floating window */
 #barChart {
   display: none;
-  /* width: 90%;
-  height: 80%;
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 70%;
+  left: 70%;
+  z-index: 9999;
+  background-color: white;
+  border: 1px solid black;
+  padding: 1px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.8);
+  max-width: 1000px;
+  max-height: 650px;
+  overflow: auto;
+  /* pan-able */
+  cursor: move;
+
+  /* resize able */
+  resize: both;
+  transform: translate(-50%, -50%) scale(0.5);
+}
+
+/* .tooltipLine {
+   font-size: 20px;
+  font-weight: bold;
+  max-width: 20px;
+  white-space: pre-line;
+
+} */
+.seaBG {
+  position: relative;
+  z-index: 1;
+  opacity: 1;
+}
+
+.mapTextBox {
+  position: relative;
+  z-index: 99999;
+  opacity: 1;
+  background-color: white;
+  font-size: 32px;
+  font-weight: bold;
+  border-radius: 10px;
+  padding: 2px;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+#clusterChart {
+  display: none;
+  width: 90%;
+  height: 90%;
+  position: fixed;
+  top: 50%;
+  left: 80%;
+  z-index: 9999;
+  background-color: white;
+  border: 1px solid black;
+  padding: 1px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.8);
+  max-width: 1000px;
+  max-height: 650px;
+  overflow: auto;
+  /* create container and below make it pan-able */
+  cursor: move;
+
+  /* resize able */
+  /* resize: both; */
+  transform: translate(-50%, -50%) scale(0.5);
+}
+
+#countryChart {
+  display: none;
+  width: 90%;
+  height: 90%;
   position: fixed;
   top: 50%;
   left: 70%;
@@ -135,9 +200,17 @@ body {
   border: 1px solid black;
   padding: 1px;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.8);
-  max-width: auto;
-  max-height: auto;
+  max-width: 1000px;
+  max-height: 650px;
   overflow: auto;
+  /* create container and below make it pan-able */
   cursor: move;
-  transform: translate(-50%, -50%) scale(0.3); */
+
+  /* resize able */
+  resize: both;
+  transform: translate(-50%, -50%) scale(0.5);
+}
+
+#clusterInfo {
+  display: none;
 }

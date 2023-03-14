@@ -14,37 +14,73 @@ const projection = d3
 
 //tooltips
 const rect = document.getElementById("textBox");
-console.log(rect)
+console.log(rect);
 
 //Data loading
 ////////////////////////////////////////////////////////////////////////////////////////////
 Promise.all([
   d3.json("./data/geo.json"), // load the geojson file
   d3.csv("./data/total_deaths_per_million.csv"), // load the CSV file that contains COVID-19 data for each country
-  d3.csv(
-    "https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/cases_deaths/biweekly_cases_per_million.csv"
-  ),
+  d3.csv("./data/biweekly_cases_per_million.csv"),
 ]).then(function (loadData) {
-
-
-
   // load the datasets into variables
   let geoData = loadData[0];
   let totalDeath = loadData[1];
   let cases__million = loadData[2];
-
 
   //sort the geoData
   const sortedGeo = geoData.features.sort((a, b) =>
     d3.ascending(a.properties.name, b.properties.name)
   );
 
+  svg
+    .append("foreignObject")
+    .attr("width", "500px")
+    .attr("height", "100px")
+    .attr("y", "40px")
+    .attr("x", "1420px")
+    .attr("class", "mapTextBox")
+    .append("xhtml:div")
+    // .transition()
+    // .duration(2000)
+
+    .style("opacity", 0);
+
+  /**
+   * enter text into above foreignObject
+   * @date 12/03/2023 - 19:57:04
+   *
+   * @param {*} text
+   */
+  function updateTextBox(text) {
+    svg.select(".mapTextBox > div").style("opacity", 1).html(text);
+    const divHeight = svg
+      .select(".mapTextBox > div")
+      .node()
+      .getBoundingClientRect().height; //return DOMRect which has info on size
+    svg.select(".mapTextBox").attr("height", divHeight * 2);
+  }
+
+  //introduction
+  let p0 =
+    "Please click one of the green button above to procced," +
+    "<br><br> 'Weekly Case' display changing cases over time" +
+    "<br><br> 'Last Total death' display color graph representing the lastest weekly death toll" +
+    "<br><br> 'Compare country' Select the country you want to compare total death of each country over time" +
+    "<br><br> 'Total Death vs Vaccine rate' perform cluster anaylysis base on countries Total Death vs Vaccine rate " +
+    "<br><br> Double click a country to bring up summary detail of selected country";
+  updateTextBox(p0);
+
   //append svg for the background
   svg
     .append("rect")
     .attr("width", "100%")
     .attr("height", "100%")
+    .attr("class", "seaBG")
     .attr("fill", "var(--seaColor)");
+
+  //make sure text box is top
+  svg.select(".mapTextBox").raise();
 
   // Draw the map
   svg
@@ -53,11 +89,22 @@ Promise.all([
     .data(sortedGeo)
     .join("path")
     .attr("d", path.projection(projection))
-    .attr("id", function (d) { return d.properties.name.replace(/\s+/g, "_") })
-    .attr("class", function (d) { return "country" })
+    .attr("id", function (d) {
+      return d.properties.name.replace(/\s+/g, "_");
+    })
+    .attr("class", function (d) {
+      return "country";
+    })
     .attr("fill", "")
     .on("click", handleMouseClick);
 
+  /**
+   * Handle what happen when you click on the map
+   * @date 12/03/2023 - 19:58:44
+   *
+   * @param {*} e
+   * @param {*} d
+   */
   function handleMouseClick(e, d) {
     const target = d3.select(this);
     const countryName = d.properties.name;
@@ -77,6 +124,12 @@ Promise.all([
       .data([selectedCountries])
       .join("li")
       .text((d) => d);
+
+    if (e.detail === 2) {
+      detailCountry(countryName);
+
+      // Add your desired behavior here
+    }
   }
 
   // Define an empty set to store the selected countries
@@ -144,23 +197,22 @@ Promise.all([
    * @date 05/03/2023 - 13:49:51
    */
   function latestDeathMillion() {
+    clusterInfo.style.display = "none";
+    buttonInfo.style.display = "block";
     document.getElementById("barChart").style.display = "none";
 
     document.querySelector("#textBox").style.display = "block";
 
-
-
+    //find max total death to use in color scale
     let latestDeath = totalDeath[totalDeath.length - 1]; //load the CSV and get last row
-    let index = totalDeath.length - 1;
+    let index = totalDeath.length - 1; //get index of last row
     let deathValues = Object.values(latestDeath) //ignore first two column(date and world) and sort
       .slice(2)
       .sort((a, b) => a - b); //sort acscending
 
     let maxTotalDeath = d3.max(deathValues);
-    console.log("maxxxxx " + maxTotalDeath)
 
-
-
+    //scale color base
     let colorScale = palette(0, maxTotalDeath); //return color between 0 and maxTotalDeath
     console.log(latestDeath);
     // Set the initial fill color of each country based on the current data
@@ -180,38 +232,54 @@ Promise.all([
         }
       });
 
-    d3.select("#buttonInfo").text("This Chart display the latest total death per millions from Covid," +
-      "The globally the max death per million is " + Math.round(maxTotalDeath) + ". Interestingly, while majority of country share similar value except those in Africa and Asia," +
-      " This could be African countries is under reported as they dont have the means to keep a proper record");
+    d3.select("#buttonInfo").text(
+      "This Chart display the latest total death per millions from Covid," +
+      "The globally the max death per million is " +
+      Math.round(maxTotalDeath) +
+      ". Interestingly, while majority of country share similar value except those in Africa and Asia," +
+      " This could be African countries is under reported as they dont have the means to keep a proper record"
+    );
     createLegend(svg, colorScale);
     // console.log(totalDeath)
   }
 
   /**
-   *
+   * Function that update the map color everyday
+   * @date 12/03/2023 - 19:52:47
    */
   function weeklyCasesMillion() {
+    clusterInfo.style.display = "none";
+    buttonInfo.style.display = "block";
     document.getElementById("barChart").style.display = "none";
 
+    //summary text
     d3.select("#buttonInfo").html(
-      "Below is a time series graph depicting the weekly cases " +
-      "per million for each country to illustrate the spread of the " +
-      "virus and how well each country deals with the virus based on the colour. " +
-
-      "<br>" +
-      "<br>When the record first began at Janury 2020, Cases was relatively low, with US, africa countries and Russia leading in cases," +
-      "this is likely due to the strict when Coid-19 quanrantine rules was rolled out in most country" +
-
-      "<br>" +
-      "<br>Cases remain relatively stable till around 2020 November which a explosion of case can be observed especially in the upper hemeisphere," +
-
-
-      "<br>" +
-      "<br>Cases start to lower after winter 2020, and remain low till novmber 2021, where case exploded due to even more infectious Omicron strand is detected  " +
-      "However due to the much less serve nature of Omicron and vaccine, Most country stop testing and recording"
-
+      "Below is a time series graph depicting the weekly cases "
     );
 
+    //set up text paragraph for textbox
+
+    let p1 =
+      "First detected in China, On the left is a time series graph depicting the weekly cases " +
+      "per million of each country to illustrate the spread of the " +
+      "virus over the globe and how well each country deals with the virus spread based on the scaled colour." +
+      "<br>" +
+      "<br>  When the record first began at Janury 2020, Cases was relatively low, with US, africa countries and Russia leading in cases.";
+
+    let p2 =
+      "Cases remain relatively low and stable likely due to lockdown, but at around 2020 November there is explosion of" +
+      "case especially in the upper hemeisphere. this is likely due to winter where we stay togehter indoor and the more infectious Beta variant";
+
+    let p3 =
+      "Cases exploded again due to the even more infectious delta variant at around winter 2021, but lower till around the end of 2021," +
+      "where case exploded again due to even more infectious Omicron variant is detected  ";
+
+    let p4 =
+      "However due to the much less serve nature of Omicron and effectiness vaccine in preventing serverc conplication , Most country stop testing and recording at around summer 2022" +
+      "So even though it appear overed, we have no way of know how wide spead covid currently is";
+
+    //updateTextBox(p1)
+    console.log(p1);
 
     //finding 95th quantile
     const n = cases__million.map((d) =>
@@ -225,17 +293,13 @@ Promise.all([
     let quantile = Math.round(q[index]);
     console.log(quantile);
 
-    //color scale base on the 95th quantile to avoid skewed scale with outlier
-    // const colorScale = d3.scaleLinear()
-    // .domain([0, quantile])
-    // .range(["white", "red"])
-
     const colorScale = palette(0, quantile);
 
     // Group the data by date
     const gData = d3.group(loadData[2], (d) => d.date);
 
     function selectDate(day) {
+      //colour map by smatching date
       const selectedData = gData.get(day);
       // console.log(typeof day)
       d3.select("#worldmap .displayDate").text(day);
@@ -260,10 +324,30 @@ Promise.all([
     let dateObj = new Date(defaultDate);
     const today = new Date("2023-02-21"); //make a function to get latest date instead
 
+    /**
+     * increment the date from defaultDate, each day updating the colour of the map
+     * by calling the selectDate()
+     * @date 11/03/2023 - 22:17:58
+     */
     function incrementDate() {
       while (dateObj < today) {
         setTimeout(incrementDate, 100);
         dateObj.setDate(dateObj.getDate() + 1);
+
+        const dateStr = dateObj.toISOString().slice(0, 10); // convert back to string
+        if (dateStr === "2020-01-20") {
+          updateTextBox(p1);
+        }
+        if (dateStr === "2020-10-15") {
+          updateTextBox(p2);
+        }
+        if (dateStr === "2021-10-15") {
+          updateTextBox(p3);
+        }
+        if (dateStr === "2022-01-15") {
+          updateTextBox(p4);
+        }
+
         return selectDate(dateObj.toISOString().slice(0, 10)); //convert back to string
       }
     }
@@ -285,13 +369,13 @@ Promise.all([
     const Labels = colorScale.domain().map((d) => d3.format(".2s")(d));
     Labels.push("Over " + Labels[13]); //14th element
 
+    //remove every legend at the start of function
     svg.selectAll(".legend").remove();
 
     const legendContainer = svg
       .append("g")
       .attr("class", "legend")
-      .attr("transform", "translate(5,780)")
-
+      .attr("transform", "translate(5,680)");
 
     const legend = legendContainer
       .selectAll(".legend")
@@ -339,14 +423,170 @@ Promise.all([
       .text("No Record");
   }
 
+  const closeButton = document.createElement("button");
+  closeButton.textContent = "Close";
+  countryChart.appendChild(closeButton);
 
+  /**
+   * Generate detail country data graph on double click
+   * @date 13/03/2023 - 10:42:21
+   *
+   * @param {*} Dcountry
+   */
+  function detailCountry(Dcountry) {
+    clusterInfo.style.display = "none";
 
+    countryChart.style.display = "block";
+
+    d3.selectAll("path").style("fill", "var(--mapDefaultColor)");
+
+    // Add event listener to close button
+    closeButton.addEventListener("click", () => {
+      countryChart.style.display = "none";
+    });
+
+    let DDcountry = Dcountry;
+
+    d3.selectAll("#" + DDcountry.replace(/\s+/g, "_")).style("fill", "black");
+
+    console.log(DDcountry);
+
+    d3.csv("/data/LastDataRecord.csv").then((data) => {
+      const ddCountryData = data.filter((d) => d.location === DDcountry);
+      const geoCountry = geoData.features.filter(
+        (feature) => feature.properties.name === DDcountry
+      );
+
+      const total_cases = ddCountryData.map((d) => d.total_cases);
+      const total_cases_per_million = ddCountryData.map(
+        (d) => d.total_cases_per_million
+      );
+      const total_deaths = ddCountryData.map((d) => d.total_deaths);
+      const total_deaths_per_million = ddCountryData.map(
+        (d) => d.total_deaths_per_million
+      );
+      const icu_patients_per_million = ddCountryData.map(
+        (d) => d.icu_patients_per_million
+      );
+      const hosp_patients_per_million = ddCountryData.map(
+        (d) => d.hosp_patients_per_million
+      );
+      const total_tests_per_thousand = ddCountryData.map(
+        (d) => d.total_tests_per_thousand
+      );
+      const total_vaccinations_per_hundred = ddCountryData.map(
+        (d) => d.total_vaccinations_per_hundred
+      );
+      const people_vaccinated_per_hundred = ddCountryData.map(
+        (d) => d.people_vaccinated_per_hundred
+      );
+      const human_development_index = ddCountryData.map(
+        (d) => d.human_development_index
+      );
+      const stringency_index = ddCountryData.map((d) => d.stringency_index);
+      const gdp_per_capita = ddCountryData.map((d) => d.gdp_per_capita);
+
+      //set up svg
+      const margin = { top: 10, right: 10, bottom: 100, left: 80 };
+      const width = 900 - margin.left - margin.right;
+      const height = 600 - margin.top - margin.bottom;
+
+      // Remove existing SVG container
+      //d3.select("#countryChart svg").remove();
+
+      const svgID = `countryChart-${DDcountry}-svg`;
+
+      // Create the SVG container
+      console.log(svgID)
+      let svg = d3
+        .select("#countryChart").append('div')
+        .append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+        .attr("id", `#${svgID}`)
+        .attr("transform", `translate(${margin.left}, ${margin.top})`);
+
+      svg
+        .append("svg")
+        .attr("class", "countryC")
+        //.attr("id", `#${svgID}`)
+        .attr("width", 500)
+        .attr("height", 500)
+        .attr("fill", "red")
+        .append("g");
+      //.attr("transform", `translate(${margin.left}, ${margin.top})`);
+
+      svg
+        .append("text")
+        .attr("x", 300)
+        .attr("y", 90)
+        .style("font-weight", "bold")
+        .style("font-size", "32px")
+        .style("text-decoration", "underline")
+
+        .text(`Summary data on Covid-19`);
+
+      svg
+        .append("text")
+        .attr("x", 20)
+        .attr("y", 20)
+        .style("font-weight", "bold")
+        .style("font-size", "45px")
+        .text(DDcountry);
+
+      // Define an array of variable names
+      const variables = [
+        "total_cases",
+        "total_deaths",
+        "total_tests_per_thousand",
+        "total_cases_per_million",
+        "total_deaths_per_million",
+        "icu_patients_per_million",
+        "hosp_patients_per_million",
+        "total_vaccinations_per_hundred",
+        "people_vaccinated_per_hundred",
+        "human_development_index",
+        "stringency_index",
+        "gdp_per_capita",
+      ];
+
+      variables.forEach((variable, index) => {
+        const value = ddCountryData[0][variable] || "No record"; //if empty no record
+        const formatt = variable
+          .replace(/_/g, " ")
+          .replace(/\b\w/g, (c) => c.toUpperCase());
+
+        svg
+          .append("text")
+          .attr("x", 300)
+          .attr("y", 150 + index * 30)
+          .style("font-weight", "bold")
+          .style("font-size", "28px")
+          .text(`${formatt}: ${value}`);
+      });
+
+      //project country
+      const projection = d3.geoMercator().fitSize([250, 250], geoCountry[0]);
+
+      svg
+        .append("g")
+        .attr("x", 130)
+        .attr("y", 150)
+        .selectAll("path")
+        .data(geoCountry)
+        .join("path")
+        .attr("d", path.projection(projection))
+        .attr("transform", "translate(10, 150)")
+        .style("fill", "var(--mapDefaultColor)");
+
+      console.log(projection);
+    });
+  } //end here country
 
   // Handle button click event
   d3.select("#start-transition").on("click", weeklyCasesMillion);
   d3.select("#start-transition2").on("click", latestDeathMillion);
 });
-
-
 
 //export { geoData };

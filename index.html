@@ -31,14 +31,41 @@
       <button id="start-transition">Weekly Cases(p.m)</button>
       <button id="start-transition2">Latest Total Death(p.m)</button>
       <button id="start-transitionBar">Compare Country</button>
+      <button id="start-transitionCluster">Total Death vs Vaccine rate</button>
+      <!-- <button onclick="kmeanIterate();" id="step">Iteration Step</button> -->
+
     </div>
 
     <div class="mainMap">
       <p id="buttonInfo"></p>
+      <p id="clusterInfo">This is a cluster anaylysis on the Total number of death vs total vaccine per hundred people
+        including booster
+        (also a good indication on how wealthy the country is)to see if there is any relation between vaccine and death
+        and also continent.
+        by hoving over a centriod, the chart will color the points by the continent.<br><br>
+        we can see that poorer African countries has the lowest vaccine rate and death, this is most likely due to lack
+        of equipment and means to keep record of covid,
+        rather than any indication of it effectiveness of covid response, <br><br>Asian countries on the other hand, has
+        much
+        lower death per million compare to similar european country of similar vaccination rate. This is likely due to
+        Asian country has much stricter lock down rules and far more likely to
+        follow the rules than european population
+
+      </p>
       <div class="info"></div>
+
       <div id="barChart">
         <svg viewBox="0 0 500 500" preserveAspectRatio="xMidYMid meet"></svg>
       </div>
+
+      <div id="clusterChart">
+        <!-- <svg viewBox="0 0 500 500" preserveAspectRatio="xMidYMid meet"></svg> -->
+      </div>
+
+      <div id="countryChart">
+        <!-- <svg viewBox="0 0 500 500" preserveAspectRatio="xMidYMid meet"></svg> -->
+      </div>
+
       <div id="worldmap">
         <div class="info"></div>
         <div class="displayDate"></div>
@@ -71,6 +98,7 @@
 <!-- <script type="module" src="./js/casesOverTime.js"></script> -->
 
 <script src="./js/bar.js"></script>
-<script type="module" src="./js/csv.js"></script>
+<script src="./js/cluster.js"></script>
+
 
 </html>

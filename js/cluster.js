@@ -1,5 +1,11 @@
 d3.select("#start-transitionCluster").on("click", cluster);
+
+
+
+
 //pan("clusterChart");
+
+
 
 //initial state, decide if cluster() run or not by button press
 let chartGenerated = false;

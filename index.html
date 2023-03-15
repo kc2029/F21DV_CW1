@@ -21,10 +21,12 @@
 
     <h1>Welcome to Covid Analytics 19 <img src="./data/covid-19.svg" alt="covid" width=30 height=30 class="logo"></h1>
 
-    <p>Covid-19(SARS-CoV-2) is a contagious airborne virus infection that has swept through the globe over the last two
+    <p id="introduction">Covid-19(SARS-CoV-2) is a contagious airborne virus infection that has swept through the globe
+      over the last two
       years with devastating effects on the world with hundreds of millions of cases of infections and millions of death
-      and long-term health effect</p>
-    <div>Select an option below</div>
+      and long-term health effect. This is a visualisation of how the world and countries deal with Covid 19, how
+      different country's covid responds, vaccination rate has on Covid-19 performanced againest other countries</p>
+    <div>Please select an option below</div>
     <div class="buttonLayout">
       <button id="refresh">Refresh</button>
       <button id="start-transition">Weekly Cases(p.m)</button>
@@ -37,7 +39,8 @@
 
     <div class="mainMap">
       <p id="buttonInfo"></p>
-      <p id="clusterInfo">This is a cluster anaylysis on the Total number of death vs total vaccine per hundred people
+      <div class="chartInfo" id="clusterInfo">This is a cluster anaylysis on the Total number of death vs total vaccine
+        per hundred people
         including booster
         (also a good indication on how wealthy the country is)to see if there is any relation between vaccine and death
         and also continent.
@@ -50,7 +53,18 @@
         Asian country has much stricter lock down rules and far more likely to
         follow the rules than european population
 
-      </p>
+      </div>
+
+      <div class="chartInfo" id="barInfo">
+        "Select all the country you wish to compare to see how they fared againest Coivd-19" +
+        "For example comparing UK to other European country" +
+        "you can also hover over the line to see the total death number and where the country is on the world map"
+      </div>
+
+
+
+
+
       <div class="info"></div>
 
       <div id="barChart">
@@ -58,6 +72,8 @@
       </div>
 
       <div id="clusterChart">
+
+
         <!-- <svg viewBox="0 0 500 500" preserveAspectRatio="xMidYMid meet"></svg> -->
       </div>
 
@@ -66,6 +82,11 @@
       </div>
 
       <div id="worldmap">
+        <input type="date" id="date-input" min="2020-01-15" max="2023-02-21" step="7">
+        <input type="range" id="date-slider" min="0" max="164" step="1">
+        <button id="select-btn">Select Date</button>
+
+
         <div class="info"></div>
         <div class="displayDate"></div>
         <svg viewBox="0 0 1980 1080" preserveAspectRatio="xMidYMid meet">
@@ -98,6 +119,7 @@
 
 <script type="text/javascript" src="./js/bar.js"></script>
 <script type="text/javascript" src="./js/cluster.js"></script>
+<script type="text/javascript" src="./js/tooltip.js"></script>
 
 
 </html>

@@ -54,6 +54,8 @@ chartc.addEventListener("mousemove", (e) => {
  * @date 12/03/2023 - 14:03:00
  */
 function cluster() {
+
+
   // Get the #clusterInfo element
   const clusterInfo = document.querySelector("#clusterInfo");
 
@@ -69,7 +71,7 @@ function cluster() {
     document.getElementById("clusterChart").style.display = "block";
 
     //load the require csv
-    d3.csv("./data/LastDataRecord.csv").then((data) => {
+    d3.csv("https://raw.githubusercontent.com/kc2029/F21DV_CW1/main/data/lastDataRecord.csv").then((data) => {
       let da = data;
       let pointz = []; // initialise empty array to hold points of each country
       //convert it to a easier to work with form for scatter
@@ -324,7 +326,7 @@ function cluster() {
         setTimeout(() => {
           kmeanIterate();
           //console.log("iteration" + i)
-        }, i * 1000);
+        }, i * 100);
       }
 
       function brush() {

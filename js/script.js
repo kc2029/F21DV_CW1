@@ -1,4 +1,35 @@
 let worldMap;
+
+
+/**
+ * create a global function to add shake animation to text box
+ */
+window.showButtonInfo = function () {
+  var buttonInfo = document.getElementById("buttonInfo");
+  buttonInfo.classList.add("shake-animation"); // add class to trigger animation
+  buttonInfo.style.display = "block";
+
+  // remove class after animation completes
+  setTimeout(function () {
+    buttonInfo.classList.remove("shake-animation");
+  }, 500);
+};
+
+
+
+
+const dateInput = document.getElementById('date-input');
+const selectBtn = document.getElementById('select-btn');
+const dateSlider = document.getElementById('date-slider');
+
+
+
+let intervalID;
+var weeklyFunctionDisabled = false;
+
+
+
+
 // The svg
 const svg = d3.select("#worldmap g.map"), //select the world map class
   width = +svg.attr("width"),
@@ -19,9 +50,9 @@ console.log(rect);
 //Data loading
 ////////////////////////////////////////////////////////////////////////////////////////////
 Promise.all([
-  d3.json("https://raw.githubusercontent.com/kc2029/F21DV_CW1/main/data/geo.json?token=GHSAT0AAAAAAB66QAXCPAA7AMGMRJ6ZR5QMZAQLAWQ"), // load the geojson file
-  d3.csv("https://raw.githubusercontent.com/kc2029/F21DV_CW1/main/data/weekly_deaths_per_million.csv?token=GHSAT0AAAAAAB66QAXDPYZ3RM3GYQDPC754ZAQLH6Q"), // load the CSV file that contains COVID-19 data for each country
-  d3.csv("https://raw.githubusercontent.com/kc2029/F21DV_CW1/main/data/total_deaths_per_million.csv?token=GHSAT0AAAAAAB66QAXDJL42FWFZWRX2PYWGZAQLCAQ"),
+  d3.json("https://raw.githubusercontent.com/kc2029/F21DV_CW1/main/data/geo.json"), // load the geojson file
+  d3.csv("https://raw.githubusercontent.com/kc2029/F21DV_CW1/main/data/total_deaths_per_million.csv"), // load the CSV file that contains COVID-19 data for each country
+  d3.csv("https://raw.githubusercontent.com/kc2029/F21DV_CW1/main/data/weekly_deaths_per_million.csv"),
 ]).then(function (loadData) {
   // load the datasets into variables
   let geoData = loadData[0];
@@ -32,6 +63,8 @@ Promise.all([
   const sortedGeo = geoData.features.sort((a, b) =>
     d3.ascending(a.properties.name, b.properties.name)
   );
+
+
 
   svg
     .append("foreignObject")
@@ -197,6 +230,7 @@ Promise.all([
    * @date 05/03/2023 - 13:49:51
    */
   function latestDeathMillion() {
+    showButtonInfo()
     clusterInfo.style.display = "none";
     buttonInfo.style.display = "block";
     document.getElementById("barChart").style.display = "none";
@@ -248,6 +282,7 @@ Promise.all([
    * @date 12/03/2023 - 19:52:47
    */
   function weeklyCasesMillion() {
+    showButtonInfo()
     clusterInfo.style.display = "none";
     buttonInfo.style.display = "block";
     document.getElementById("barChart").style.display = "none";
@@ -299,6 +334,8 @@ Promise.all([
     const gData = d3.group(loadData[2], (d) => d.date);
 
     function selectDate(day) {
+
+
       //colour map by smatching date
       const selectedData = gData.get(day);
       // console.log(typeof day)
@@ -330,8 +367,11 @@ Promise.all([
      * @date 11/03/2023 - 22:17:58
      */
     function incrementDate() {
+      if (weeklyFunctionDisabled) {
+        return; // exit function if weekly function is disabled
+      }
       while (dateObj < today) {
-        setTimeout(incrementDate, 100);
+        setTimeout(incrementDate, 10);
         dateObj.setDate(dateObj.getDate() + 1);
 
         const dateStr = dateObj.toISOString().slice(0, 10); // convert back to string
@@ -451,7 +491,7 @@ Promise.all([
 
     console.log(DDcountry);
 
-    d3.csv("/data/LastDataRecord.csv").then((data) => {
+    d3.csv("https://raw.githubusercontent.com/kc2029/F21DV_CW1/main/data/lastDataRecord.csv").then((data) => {
       const ddCountryData = data.filter((d) => d.location === DDcountry);
       const geoCountry = geoData.features.filter(
         (feature) => feature.properties.name === DDcountry
@@ -586,7 +626,75 @@ Promise.all([
 
       console.log(projection);
     });
-  } //end here country
+  }
+
+  // add event listener to slider element
+  document.getElementById("date-slider").addEventListener("input", disableWeeklyFunction);
+
+  // add event listener to date select button
+  document.getElementById("select-btn").addEventListener("click", disableWeeklyFunction);
+
+  // function to disable weeklyCasesMillion() function
+  function disableWeeklyFunction() {
+    clearInterval(intervalID); // clear the interval used in weeklyCasesMillion() function
+    weeklyFunctionDisabled = true; // set a variable to indicate that the weekly function is disabled
+  }
+
+
+  // Event listeners for the date selection
+  selectBtn.addEventListener('click', () => {
+    const bDate = dateInput.value;
+    selectDate(bDate);
+  });
+
+  dateSlider.addEventListener('input', () => {
+    const sliderValue = parseInt(dateSlider.value);
+    const startDate = new Date('2020-01-15');
+    const selectedDate = new Date(startDate.getTime() + sliderValue * 7 * 24 * 60 * 60 * 1000);
+    const bDate = selectedDate.toISOString().split('T')[0];
+    selectDate(bDate);
+  });
+
+  /**
+   * Color scale the map base on the date entered
+   * @date 15/03/2023 - 08:46:59
+   *
+   * @param {*} day
+   */
+  function selectDate(day) {
+    //finding 95th quantile
+    const n = cases__million.map((d) =>
+      Object.values(d)
+        .slice(2)
+        .map((val) => +val)
+    );
+    const q = n.flat(); //convert from object array to flat array
+    q.sort((a, b) => a - b);
+    const index = Math.round((q.length - 1) * 0.95 + 1); //find 95th index
+    let quantile = Math.round(q[index]);
+
+    d3.select("#worldmap .displayDate").text(day);
+    const colorScale = palette(0, quantile);
+    const gData = d3.group(loadData[2], (d) => d.date);
+    const selectedData = gData.get(day);
+
+    createLegend(svg, colorScale);
+    svg
+      .selectAll('path')
+      .transition()
+      .duration(90)
+      .style('fill', (d) => {
+        const cases = selectedData[0][d.properties.name];
+        if (cases) {
+          return colorScale(cases);
+        } else {
+          return '#ccc';
+        }
+      });
+  }
+
+  // Initial map display
+  //selectDate('2020-01-15');
 
   // Handle button click event
   d3.select("#start-transition").on("click", weeklyCasesMillion);

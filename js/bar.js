@@ -1,5 +1,7 @@
 d3.select("#start-transitionBar").on("click", lineChart);
 
+
+
 // Create close button
 const closeButton = document.createElement("button");
 closeButton.textContent = "Close";
@@ -13,6 +15,7 @@ closeButton.addEventListener("click", () => {
 
 
 function pan(chartID) {
+
 
 
   const chart = document.getElementById(chartID);
@@ -79,6 +82,7 @@ let selectedLines = null;
  * @date 12/03/2023 - 13:54:36
  */
 function lineChart() {
+  showButtonInfo()
   clusterInfo.style.display = "none";
   buttonInfo.style.display = "block";
   const mousemove = function (event, d) {
@@ -113,7 +117,7 @@ function lineChart() {
   let currentC = d3.select("#worldmap .info").text().trim();
   let countrylist = currentC.split(",").map((d) => d.trim());
 
-  d3.csv("/data/CovidRate.csv").then((data) => {
+  d3.csv("https://raw.githubusercontent.com/kc2029/F21DV_CW1/main/data/CovidRate.csv").then((data) => {
     names = countrylist;
     //console.log(countrylist);
     //console.log("name " + typeof countrylist);
@@ -133,27 +137,10 @@ function lineChart() {
       .append("g")
       .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
-    var panL = svg.append("g");
-
-    panL.append("rect")
-      .attr("id", "linePan")
-      .attr("width", 50)
-      .attr("height", 50)
-      .attr("x", 20)
-      .attr("y", 0)
-      .attr("fill", "lightgrey");
-
-    panL.append("text")
-      .attr("x", 30)
-      .attr("y", 25)
-      .style("font-weight", "bold")
-      .style("font-size", "15px")
-      .text("PAN");
 
 
-    panL.on("mousedown", function (e) {
-      console.log("here");
-    });
+
+
 
 
     // Define the date parsing function

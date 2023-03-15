@@ -1,6 +1,8 @@
 let worldMap;
 
 
+
+
 /**
  * create a global function to add shake animation to text box
  */
@@ -17,20 +19,22 @@ window.showButtonInfo = function () {
 
 
 
-
+//return and store values for the date slider/selector
 const dateInput = document.getElementById('date-input');
 const selectBtn = document.getElementById('select-btn');
 const dateSlider = document.getElementById('date-slider');
 
 
 
-let intervalID;
+
+
+//keep react kf weeklymillion function is running or not
 var weeklyFunctionDisabled = false;
+let intervalID; //empty value to stop interval
 
 
 
-
-// The svg
+// The main map SVG set up
 const svg = d3.select("#worldmap g.map"), //select the world map class
   width = +svg.attr("width"),
   height = +svg.attr("height");
@@ -47,13 +51,14 @@ const projection = d3
 const rect = document.getElementById("textBox");
 console.log(rect);
 
-//Data loading
+//Loading the require Datasets
 ////////////////////////////////////////////////////////////////////////////////////////////
 Promise.all([
   d3.json("https://raw.githubusercontent.com/kc2029/F21DV_CW1/main/data/geo.json"), // load the geojson file
   d3.csv("https://raw.githubusercontent.com/kc2029/F21DV_CW1/main/data/total_deaths_per_million.csv"), // load the CSV file that contains COVID-19 data for each country
   d3.csv("https://raw.githubusercontent.com/kc2029/F21DV_CW1/main/data/weekly_deaths_per_million.csv"),
 ]).then(function (loadData) {
+
   // load the datasets into variables
   let geoData = loadData[0];
   let totalDeath = loadData[1];
@@ -65,7 +70,7 @@ Promise.all([
   );
 
 
-
+  //add text box
   svg
     .append("foreignObject")
     .attr("width", "500px")
@@ -74,10 +79,9 @@ Promise.all([
     .attr("x", "1420px")
     .attr("class", "mapTextBox")
     .append("xhtml:div")
-    // .transition()
-    // .duration(2000)
 
-    .style("opacity", 0);
+    .style("opacity", 0)
+
 
   /**
    * enter text into above foreignObject
@@ -94,7 +98,7 @@ Promise.all([
     svg.select(".mapTextBox").attr("height", divHeight * 2);
   }
 
-  //introduction
+  //introduction text
   let p0 =
     "Please click one of the green button above to procced," +
     "<br><br> 'Weekly Case' display changing cases over time" +
@@ -104,7 +108,7 @@ Promise.all([
     "<br><br> Double click a country to bring up summary detail of selected country";
   updateTextBox(p0);
 
-  //append svg for the background
+  //append svg for the blue sea background
   svg
     .append("rect")
     .attr("width", "100%")
@@ -112,7 +116,7 @@ Promise.all([
     .attr("class", "seaBG")
     .attr("fill", "var(--seaColor)");
 
-  //make sure text box is top
+  //move text box to top
   svg.select(".mapTextBox").raise();
 
   // Draw the map
@@ -158,10 +162,9 @@ Promise.all([
       .join("li")
       .text((d) => d);
 
+    //double click event
     if (e.detail === 2) {
       detailCountry(countryName);
-
-      // Add your desired behavior here
     }
   }
 
@@ -230,11 +233,12 @@ Promise.all([
    * @date 05/03/2023 - 13:49:51
    */
   function latestDeathMillion() {
-    showButtonInfo()
+    showButtonInfo() //call function that animate the text block
     clusterInfo.style.display = "none";
     buttonInfo.style.display = "block";
-    document.getElementById("barChart").style.display = "none";
 
+
+    document.getElementById("barChart").style.display = "none";
     document.querySelector("#textBox").style.display = "block";
 
     //find max total death to use in color scale
@@ -242,22 +246,22 @@ Promise.all([
     let index = totalDeath.length - 1; //get index of last row
     let deathValues = Object.values(latestDeath) //ignore first two column(date and world) and sort
       .slice(2)
-      .sort((a, b) => a - b); //sort acscending
+      .sort((a, b) => a - b);
 
-    let maxTotalDeath = d3.max(deathValues);
+    let maxTotalDeath = d3.max(deathValues); //use for color scale domain
 
-    //scale color base
+    //set up color scale's domain
     let colorScale = palette(0, maxTotalDeath); //return color between 0 and maxTotalDeath
-    console.log(latestDeath);
+
     // Set the initial fill color of each country based on the current data
     svg
       .selectAll("path")
-      .style("fill", "var--mapDefaultColor") //take color from CSS
+      .style("fill", "var--mapDefaultColor") //fill all path with default color first
       .transition()
       .duration(1000)
-
+      //fill the color according to the country and total death
       .style("fill", (d) => {
-        const countryData = totalDeath[index][d.properties.name]; //check if
+        const countryData = totalDeath[index][d.properties.name]; //index is last row, hence the latest value for the country
 
         if (countryData) {
           return colorScale(+countryData);
@@ -266,6 +270,7 @@ Promise.all([
         }
       });
 
+    //display relevant text when this function is called.
     d3.select("#buttonInfo").text(
       "This Chart display the latest total death per millions from Covid," +
       "The globally the max death per million is " +
@@ -273,7 +278,7 @@ Promise.all([
       ". Interestingly, while majority of country share similar value except those in Africa and Asia," +
       " This could be African countries is under reported as they dont have the means to keep a proper record"
     );
-    createLegend(svg, colorScale);
+    createLegend(svg, colorScale);//call legend function and create legend
     // console.log(totalDeath)
   }
 
@@ -282,12 +287,12 @@ Promise.all([
    * @date 12/03/2023 - 19:52:47
    */
   function weeklyCasesMillion() {
-    showButtonInfo()
+    showButtonInfo() //call function that animate the text block
     clusterInfo.style.display = "none";
     buttonInfo.style.display = "block";
     document.getElementById("barChart").style.display = "none";
 
-    //summary text
+    //summary text that get call at different time
     d3.select("#buttonInfo").html(
       "Below is a time series graph depicting the weekly cases "
     );
@@ -328,11 +333,18 @@ Promise.all([
     let quantile = Math.round(q[index]);
     console.log(quantile);
 
-    const colorScale = palette(0, quantile);
+    const colorScale = palette(0, quantile); //color scale with 95th quantile as domain
 
     // Group the data by date
     const gData = d3.group(loadData[2], (d) => d.date);
 
+
+    /**
+     * Function that color in the map by date(weekly million cases)
+     * @date 15/03/2023 - 11:57:09
+     *
+     * @param {*} day
+     */
     function selectDate(day) {
 
 
@@ -357,7 +369,7 @@ Promise.all([
         });
     }
 
-    let defaultDate = "2020-01-15";
+    let defaultDate = "2020-01-15"; //default date when record began
     let dateObj = new Date(defaultDate);
     const today = new Date("2023-02-21"); //make a function to get latest date instead
 
@@ -391,7 +403,7 @@ Promise.all([
         return selectDate(dateObj.toISOString().slice(0, 10)); //convert back to string
       }
     }
-    incrementDate();
+    incrementDate();//increatment date one by one
 
     createLegend(svg, colorScale); //svg is the svg element name
   }
@@ -463,6 +475,7 @@ Promise.all([
       .text("No Record");
   }
 
+  //Button that close the country summary chart
   const closeButton = document.createElement("button");
   closeButton.textContent = "Close";
   countryChart.appendChild(closeButton);
@@ -492,6 +505,8 @@ Promise.all([
     console.log(DDcountry);
 
     d3.csv("https://raw.githubusercontent.com/kc2029/F21DV_CW1/main/data/lastDataRecord.csv").then((data) => {
+
+      //same the double clicked country data into seperate varible
       const ddCountryData = data.filter((d) => d.location === DDcountry);
       const geoCountry = geoData.features.filter(
         (feature) => feature.properties.name === DDcountry
@@ -541,8 +556,6 @@ Promise.all([
 
       let svg = d3
         .select("#countryChart")
-        // .attr("id", `#${svgID}`)
-        // .attr("class", "countryC")
         .append("svg")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
@@ -550,15 +563,7 @@ Promise.all([
         .attr("id", `#${svgID}`)
         .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
-      // svg
-      //   .append("svg")
-      //   //.attr("class", "countryC")
-      //   .attr("id", `#${svgID}`)
-      //   .attr("width", 500)
-      //   .attr("height", 500)
-      //   .attr("fill", "red")
-      //   .append("g");
-      //.attr("transform", `translate(${margin.left}, ${margin.top})`);
+
 
       svg
         .append("text")
@@ -594,26 +599,36 @@ Promise.all([
         "gdp_per_capita",
       ];
 
+      //generate the summary data
       variables.forEach((variable, index) => {
         const value = ddCountryData[0][variable] || "No record"; //if empty no record
+
+        //format the variables element before displaying as text
         const formatt = variable
           .replace(/_/g, " ")
           .replace(/\b\w/g, (c) => c.toUpperCase());
 
-        svg
+        const text = svg
           .append("text")
           .attr("x", 300)
           .attr("y", 150 + index * 30)
           .style("font-weight", "bold")
-          .style("font-size", "28px")
-          .text(`${formatt}: ${value}`);
+          .style("font-size", "28px");
+
+        text.append("tspan")
+          .text(`${formatt}: `);
+
+        text.append("tspan")
+          .style("fill", "red")
+          .text(`${value}`);
       });
 
-      //project country
+
+
+      //project only the selected country
       const projection = d3.geoMercator().fitSize([250, 250], geoCountry[0]);
 
       svg
-
         .append("g")
         .attr("x", 130)
         .attr("y", 150)
@@ -624,9 +639,11 @@ Promise.all([
         .attr("transform", "translate(10, 150)")
         .style("fill", "var(--mapDefaultColor)");
 
-      console.log(projection);
+
     });
   }
+
+  //Below is code for date slider
 
   // add event listener to slider element
   document.getElementById("date-slider").addEventListener("input", disableWeeklyFunction);
@@ -647,6 +664,7 @@ Promise.all([
     selectDate(bDate);
   });
 
+  //set up slider to return day with 7 day steps
   dateSlider.addEventListener('input', () => {
     const sliderValue = parseInt(dateSlider.value);
     const startDate = new Date('2020-01-15');

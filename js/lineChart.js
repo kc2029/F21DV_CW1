@@ -280,17 +280,12 @@ function lineChart() {
         .on("mouseleave", mouseleave);
 
       const lastDataPoint = nameData[nameData.length - 1];
-      // const MaxD2 = d3.max(
-      //   nameData.filter((d) => d.location === lastDataPoint.location),
-      //   (d) => d.total_deaths
-      // ); // calculate the maximum value of `total_deaths` only for the rows corresponding to `lastDataPoint.location`
-      // console.log(MaxD2);
+
 
       svg
         .append("text")
-        .attr("x", xScale(lastDataPoint.date) + 5) // X-coordinate is XScale(date)
+        .attr("x", xScale(lastDataPoint.date) + 5)
         .attr("y", yScale(lastDataPoint.total_deaths))
-        // X-coordinate is yScale(total_Death)
         .attr("font-size", "12px")
         .text(name);
 
@@ -305,15 +300,6 @@ function lineChart() {
     });
   });
 
-  //text()
+
 }
 
-// function hey(va){
-//   const cou = va
-// console.log("jesus "+cou)
-// }
-
-// function text(){
-//   worldMap
-//   .style("fill", "black")
-// }

@@ -19,7 +19,9 @@
 
   <div class="mainDisplay">
 
-    <h1>Welcome to Covid Analytics 19 <img src="./data/covid-19.svg" alt="covid" width=30 height=30 class="logo"></h1>
+    <h1>Welcome to Covid Analytics 19 <img
+        src="https://raw.githubusercontent.com/kc2029/F21DV_CW1/main/data/covid-19.svg" alt="covid" width=30 height=30
+        class="logo"></h1>
 
     <p id="introduction">Covid-19(SARS-CoV-2) is a contagious airborne virus infection that has swept through the globe
       over the last two
@@ -27,6 +29,8 @@
       and long-term health effect. This is a visualisation of how the world and countries deal with Covid 19, how
       different country's covid responds, vaccination rate has on Covid-19 performanced againest other countries</p>
     <div>Please select an option below</div>
+
+    <!-- setup th layout of the buttons -->
     <div class="buttonLayout">
       <button id="refresh">Refresh</button>
       <button id="start-transition">Weekly Cases(p.m)</button>
@@ -74,17 +78,15 @@
       <div id="clusterChart">
 
 
-        <!-- <svg viewBox="0 0 500 500" preserveAspectRatio="xMidYMid meet"></svg> -->
       </div>
 
       <div id="countryChart">
-        <!-- <svg viewBox="0 0 500 500" preserveAspectRatio="xMidYMid meet"></svg> -->
       </div>
 
       <div id="worldmap">
         <input type="date" id="date-input" min="2020-01-15" max="2023-02-21" step="7">
-        <input type="range" id="date-slider" min="0" max="164" step="1">
         <button id="select-btn">Select Date</button>
+        <input type="range" id="date-slider" min="0" max="164" step="1">
 
 
         <div class="info"></div>
@@ -106,6 +108,11 @@
   </div>
 
 
+
+
+
+
+
 </body>
 
 <script>
@@ -117,7 +124,7 @@
 <script type="module" src="./js/script.js"></script>
 <!-- <script type="module" src="./js/casesOverTime.js"></script> -->
 
-<script type="text/javascript" src="./js/bar.js"></script>
+<script type="text/javascript" src="./js/lineChart.js"></script>
 <script type="text/javascript" src="./js/cluster.js"></script>
 <script type="text/javascript" src="./js/tooltip.js"></script>
 

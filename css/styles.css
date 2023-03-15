@@ -83,7 +83,7 @@ body {
   /* background-image: radial-gradient(circle, #ffffff,lightblue) */
   /* justify-content: center; */
 
-  background: radial-gradient(circle at center, #f7f8f9, rgb(197, 197, 213));
+  background: radial-gradient(circle at center, #ffffff, rgb(213, 213, 215));
 }
 .mainDisplay {
   max-width: 1080px;
@@ -244,8 +244,8 @@ body {
 }
 
 .logo {
-  width: 30px;
-  height: 30px;
+  width: 50px;
+  height: 50px;
   animation: logo 3s infinite linear;
 }
 

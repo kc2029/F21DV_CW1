@@ -1,7 +1,5 @@
 d3.select("#start-transitionBar").on("click", lineChart);
 
-
-
 // Create close button
 const closeButton = document.createElement("button");
 closeButton.textContent = "Close";
@@ -12,12 +10,8 @@ closeButton.addEventListener("click", () => {
   barChart.style.display = "none";
 });
 
-
-
+//enable pan function with element ID as input
 function pan(chartID) {
-
-
-
   const chart = document.getElementById(chartID);
   //  const linePan = document.getElementById("linePan");
 
@@ -57,23 +51,9 @@ function pan(chartID) {
   });
 }
 
-
-
+//which chart to enable
 pan("barChart");
-pan("countryChart")
-
-
-
-
-
-
-
-
-
-
-//cal all chart require
-//pan("barChart");
-
+pan("countryChart");
 
 let selectedLines = null;
 
@@ -82,12 +62,10 @@ let selectedLines = null;
  * @date 12/03/2023 - 13:54:36
  */
 function lineChart() {
-  showButtonInfo()
+  showButtonInfo();
   clusterInfo.style.display = "none";
   buttonInfo.style.display = "block";
-  const mousemove = function (event, d) {
-
-  };
+  const mousemove = function (event, d) { };
 
   const mouseover = function (event, d) {
     //  tooltipLine
@@ -117,7 +95,9 @@ function lineChart() {
   let currentC = d3.select("#worldmap .info").text().trim();
   let countrylist = currentC.split(",").map((d) => d.trim());
 
-  d3.csv("https://raw.githubusercontent.com/kc2029/F21DV_CW1/main/data/CovidRate.csv").then((data) => {
+  d3.csv(
+    "https://raw.githubusercontent.com/kc2029/F21DV_CW1/main/data/CovidRate.csv"
+  ).then((data) => {
     names = countrylist;
     //console.log(countrylist);
     //console.log("name " + typeof countrylist);
@@ -135,13 +115,8 @@ function lineChart() {
       .attr("width", width + margin.left + margin.right)
       .attr("height", height + margin.top + margin.bottom)
       .append("g")
+
       .attr("transform", `translate(${margin.left}, ${margin.top})`);
-
-
-
-
-
-
 
     // Define the date parsing function
     const parser = d3.timeParse("%Y-%m-%d");
@@ -230,20 +205,18 @@ function lineChart() {
         .x((d) => xScale(d.date))
         .y((d) => yScale(+d.total_deaths));
 
-      //
       svg.append("text").attr("class", "tooltipLine").style("opacity", 0);
 
-      //
+      //Draws the line, and some customisation(some in css)
       svg
         .append("path")
         .datum(nameData)
         .attr("id", "lineChart")
-
         .attr("fill", "none")
         .attr("stroke", colorScale(i))
         .attr("stroke-width", 1.5)
         .attr("d", line)
-        //.attr("text-anchor", function(d) { return (name)})
+        //display name and deaths and highlight the line on mouseover
         .on("mouseover", function (event, d) {
           mouseover(event, d);
           // Remove the 'selected-line' class from all lines
@@ -257,7 +230,7 @@ function lineChart() {
 
           d3.select("#worldmap > div.info").text(name);
 
-          d3.select("#" + name.replace(/\s+/g, "_")) //country with space in between doesnt work
+          d3.select("#" + name.replace(/\s+/g, "_")) //country with space in between doesnt work, so need to reformat
             .style("fill", "black");
 
           // Get the last data point of the selected line
@@ -274,13 +247,15 @@ function lineChart() {
             .style("opacity", 1)
             .attr("x", mouse[0] + 10)
             .attr("y", mouse[1] + 10)
+            .attr("font-size", "32px")
+            .attr("fill", "blue")
+
             .text(name + " Total death " + m);
         })
         .on("mousemove", mousemove)
         .on("mouseleave", mouseleave);
 
       const lastDataPoint = nameData[nameData.length - 1];
-
 
       svg
         .append("text")
@@ -289,9 +264,9 @@ function lineChart() {
         .attr("font-size", "12px")
         .text(name);
 
-
       // Append a title label to the chart
-      svg.append("text")
+      svg
+        .append("text")
         .attr("x", width / 2 - 120)
         .attr("y", margin.top / 2 + 20)
         .attr("text-anchor", "middle")
@@ -299,7 +274,4 @@ function lineChart() {
         .text("Comparison of total death of countries");
     });
   });
-
-
 }
-

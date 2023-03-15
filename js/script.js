@@ -56,7 +56,7 @@ console.log(rect);
 Promise.all([
   d3.json("https://raw.githubusercontent.com/kc2029/F21DV_CW1/main/data/geo.json"), // load the geojson file
   d3.csv("https://raw.githubusercontent.com/kc2029/F21DV_CW1/main/data/total_deaths_per_million.csv"), // load the CSV file that contains COVID-19 data for each country
-  d3.csv("https://raw.githubusercontent.com/kc2029/F21DV_CW1/main/data/weekly_deaths_per_million.csv"),
+  d3.csv("https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/cases_deaths/weekly_cases_per_million.csv"),
 ]).then(function (loadData) {
 
   // load the datasets into variables
@@ -64,7 +64,7 @@ Promise.all([
   let totalDeath = loadData[1];
   let cases__million = loadData[2];
 
-  //sort the geoData
+  //sort the geoData for better efficientcy since the dataset is alphabetical order
   const sortedGeo = geoData.features.sort((a, b) =>
     d3.ascending(a.properties.name, b.properties.name)
   );
@@ -79,7 +79,6 @@ Promise.all([
     .attr("x", "1420px")
     .attr("class", "mapTextBox")
     .append("xhtml:div")
-
     .style("opacity", 0)
 
 
@@ -127,7 +126,7 @@ Promise.all([
     .join("path")
     .attr("d", path.projection(projection))
     .attr("id", function (d) {
-      return d.properties.name.replace(/\s+/g, "_");
+      return d.properties.name.replace(/\s+/g, "_");//remove unnessary spaces
     })
     .attr("class", function (d) {
       return "country";
@@ -418,7 +417,7 @@ Promise.all([
    */
   function createLegend(svg, colorScale) {
     const colorValues = colorScale.range();
-    const Labels = colorScale.domain().map((d) => d3.format(".2s")(d));
+    const Labels = colorScale.domain().map((d) => d3.format(".3s")(d));
     Labels.push("Over " + Labels[13]); //14th element
 
     //remove every legend at the start of function
@@ -435,6 +434,14 @@ Promise.all([
       .enter()
       .append("g")
       .attr("class", "legend");
+
+    legendContainer
+      .append("text")
+      .attr("x", 0)
+      .attr("y", -10)
+      .style("font-weight", "bold")
+      .text("Per Million");
+
 
     legend
       .append("rect")

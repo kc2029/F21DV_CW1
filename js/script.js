@@ -56,7 +56,7 @@ console.log(rect);
 Promise.all([
   d3.json("https://raw.githubusercontent.com/kc2029/F21DV_CW1/main/data/geo.json"), // load the geojson file
   d3.csv("https://raw.githubusercontent.com/kc2029/F21DV_CW1/main/data/total_deaths_per_million.csv"), // load the CSV file that contains COVID-19 data for each country
-  d3.csv("https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/cases_deaths/weekly_cases_per_million.csv"),
+  d3.csv("https://raw.githubusercontent.com/kc2029/F21DV_CW1/main/data/weekly_cases_per_million.csv"),
 ]).then(function (loadData) {
 
   // load the datasets into variables
@@ -370,7 +370,7 @@ Promise.all([
 
     let defaultDate = "2020-01-15"; //default date when record began
     let dateObj = new Date(defaultDate);
-    const today = new Date("2023-02-21"); //make a function to get latest date instead
+    const today = new Date("2023-02-15"); //make a function to get latest date instead
 
     /**
      * increment the date from defaultDate, each day updating the colour of the map
@@ -382,7 +382,7 @@ Promise.all([
         return; // exit function if weekly function is disabled
       }
       while (dateObj < today) {
-        setTimeout(incrementDate, 10);
+        setTimeout(incrementDate, 10);  //timer here to change speed of loop
         dateObj.setDate(dateObj.getDate() + 1);
 
         const dateStr = dateObj.toISOString().slice(0, 10); // convert back to string

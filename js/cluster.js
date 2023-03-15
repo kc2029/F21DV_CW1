@@ -1,12 +1,6 @@
 d3.select("#start-transitionCluster").on("click", cluster);
 
 
-
-
-//pan("clusterChart");
-
-
-
 //initial state, decide if cluster() run or not by button press
 let chartGenerated = false;
 
@@ -291,7 +285,7 @@ function cluster() {
         })
         .style("fill", function (d) {
           return color(d.continent);
-        });
+        }); //colour in point base on continent
 
       // Append a title label to the chart
       svg

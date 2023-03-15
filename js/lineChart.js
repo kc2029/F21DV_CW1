@@ -83,8 +83,8 @@ function lineChart() {
   // add code to create and update the bar chart here
 
   d3.select("#buttonInfo").text(
-    "Select all the country you wish to compare to see how they fared againest Coivd-19" +
-    "For example comparing UK to other European country" +
+    "Select all the country you wish to compare to see how they fared againest Coivd-19. " +
+    "For example comparing UK to other close by European country would be a good comparision due to similarity in both location, wealth and population" +
     "you can also hover over the line to see the total death number and where the country is on the world map"
   );
 

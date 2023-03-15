@@ -271,12 +271,13 @@ Promise.all([
 
     //display relevant text when this function is called.
     d3.select("#buttonInfo").text(
-      "This Chart display the latest total death per millions from Covid," +
+      "This Chart displays the latest total death per million from Covid," +
       "The globally the max death per million is " +
       Math.round(maxTotalDeath) +
-      ". Interestingly, while majority of country share similar value except those in Africa and Asia," +
-      " This could be African countries is under reported as they dont have the means to keep a proper record"
+      ". Interestingly, while the majority of the country share similar values except those in Africa and Asia," +
+      " This could be because African countries are under-reported as they don't have the necessary means to keep a accurate record"
     );
+
     createLegend(svg, colorScale);//call legend function and create legend
     // console.log(totalDeath)
   }
@@ -303,19 +304,20 @@ Promise.all([
       "per million of each country to illustrate the spread of the " +
       "virus over the globe and how well each country deals with the virus spread based on the scaled colour." +
       "<br>" +
-      "<br>  When the record first began at Janury 2020, Cases was relatively low, with US, africa countries and Russia leading in cases.";
+      "<br>  When the record first began in January 2020, Cases were relatively low, with the US, Africa countries and Russia leading in cases.";
 
     let p2 =
-      "Cases remain relatively low and stable likely due to lockdown, but at around 2020 November there is explosion of" +
-      "case especially in the upper hemeisphere. this is likely due to winter where we stay togehter indoor and the more infectious Beta variant";
+      "Cases remain relatively low and stable likely due to lockdown, but at around 2020 November there is an explosion of " +
+      "case especially in the upper hemisphere. this is likely due to winter where we stay together indoors and the more infectious Beta variant";
 
     let p3 =
-      "Cases exploded again due to the even more infectious delta variant at around winter 2021, but lower till around the end of 2021," +
+      "Cases exploded again due to the even more infectious delta variant at around winter 2021, but lower till around the end of 2021, " +
       "where case exploded again due to even more infectious Omicron variant is detected  ";
 
     let p4 =
-      "However due to the much less serve nature of Omicron and effectiness vaccine in preventing serverc conplication , Most country stop testing and recording at around summer 2022" +
-      "So even though it appear overed, we have no way of know how wide spead covid currently is";
+      "However due to the much less severe nature of Omicron and effectiveness vaccine in preventing severe complications, Most countries stop testing and recording at around summer 2022 " +
+      "So even though it appears  the pandemic is over, we have no way of know-how widespread covid currently really is";
+
 
     //updateTextBox(p1)
     console.log(p1);
@@ -382,7 +384,7 @@ Promise.all([
         return; // exit function if weekly function is disabled
       }
       while (dateObj < today) {
-        setTimeout(incrementDate, 10);  //timer here to change speed of loop
+        setTimeout(incrementDate, 100);  //timer here to change speed of loop
         dateObj.setDate(dateObj.getDate() + 1);
 
         const dateStr = dateObj.toISOString().slice(0, 10); // convert back to string

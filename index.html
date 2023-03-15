@@ -6,28 +6,30 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/styles.css" />
 
-  <script src='https://d3js.org/d3.v7.min.js'></script>
-
-
+  <script src="https://d3js.org/d3.v7.min.js"></script>
 
   <title>Covid19 Analytics</title>
 </head>
 
 <body>
-
   <div class="mainDisplay">
+    <h1>
+      Welcome to Covid Analytics 19
+      <img src="https://raw.githubusercontent.com/kc2029/F21DV_CW1/main/data/covid-19.svg" alt="covid" width="30"
+        height="30" class="logo" />
+    </h1>
 
-    <h1>Welcome to Covid Analytics 19 <img
-        src="https://raw.githubusercontent.com/kc2029/F21DV_CW1/main/data/covid-19.svg" alt="covid" width=30 height=30
-        class="logo"></h1>
-
-    <p id="introduction">Covid-19(SARS-CoV-2) is a contagious airborne virus infection that has swept through the globe
-      over the last two
-      years with devastating effects on the world with hundreds of millions of cases of infections and millions of death
-      and long-term health effect. This is a visualisation of how the world and countries deal with Covid 19, how
-      different country's covid responds, vaccination rate has on Covid-19 performanced againest other countries</p>
+    <p id="introduction">
+      Covid-19(SARS-CoV-2) is a contagious airborne virus infection that has
+      swept through the globe over the last two years with devastating effects
+      on the world with hundreds of millions of cases of infections and
+      millions of deaths and long-term health effects. This is a visualisation
+      of how the world and countries deal with Covid 19, how different
+      country's covid responds, the vaccination rate has on Covid-19
+      performance against other countries
+    </p>
     <div>Please select an option below</div>
 
     <!-- setup th layout of the buttons -->
@@ -36,37 +38,36 @@
       <button id="start-transition">Weekly Cases(p.m)</button>
       <button id="start-transition2">Latest Total Death(p.m)</button>
       <button id="start-transitionBar">Compare Country</button>
-      <button id="start-transitionCluster">Total Death vs Vaccine rate</button>
+      <button id="start-transitionCluster">
+        Total Death vs Vaccine rate
+      </button>
       <!-- <button onclick="kmeanIterate();" id="step">Iteration Step</button> -->
-
     </div>
 
     <div class="mainMap">
       <p id="buttonInfo"></p>
-      <div class="chartInfo" id="clusterInfo">This is a cluster anaylysis on the Total number of death vs total vaccine
-        per hundred people
-        including booster
-        (also a good indication on how wealthy the country is)to see if there is any relation between vaccine and death
-        and also continent.
-        by hoving over a centriod, the chart will color the points by the continent.<br><br>
-        we can see that poorer African countries has the lowest vaccine rate and death, this is most likely due to lack
-        of equipment and means to keep record of covid,
-        rather than any indication of it effectiveness of covid response, <br><br>Asian countries on the other hand, has
-        much
-        lower death per million compare to similar european country of similar vaccination rate. This is likely due to
-        Asian country has much stricter lock down rules and far more likely to
-        follow the rules than european population
-
+      <div class="chartInfo" id="clusterInfo">
+        This is a cluster analysis of the Total number of death vs the total
+        vaccine per hundred people (including booster) also, a good indication
+        of how wealthy the country is, to see if there is any relation between
+        vaccine and death and also, continent. by hovering over a centroid,
+        the chart will colour the points by the continent.<br /><br />
+        we can see that poorer African countries have the lowest vaccine rate
+        and death, this is most likely due to a lack of proper equipment and
+        means to keep a record of covid, rather than any indication of their
+        effectiveness of covid response, <br /><br />Asian countries, on the
+        other hand, has much lower death per million compares to European
+        countries with similar vaccination rates. This is likely due to Asian
+        country has much stricter lockdown rules and its population are far
+        more likely to follow the rules than European counterpart
       </div>
 
       <div class="chartInfo" id="barInfo">
-        "Select all the country you wish to compare to see how they fared againest Coivd-19" +
-        "For example comparing UK to other European country" +
-        "you can also hover over the line to see the total death number and where the country is on the world map"
+        "Select all the countries you wish to compare to see how they fared
+        against Covid-19" + " For example comparing UK to other European
+        country" + "you can also hover over the line to see the total death
+        number and where the country is on the world map"
       </div>
-
-
-
 
 
       <div class="info"></div>
@@ -75,24 +76,18 @@
         <svg viewBox="0 0 500 500" preserveAspectRatio="xMidYMid meet"></svg>
       </div>
 
-      <div id="clusterChart">
+      <div id="clusterChart"></div>
 
-
-      </div>
-
-      <div id="countryChart">
-      </div>
+      <div id="countryChart"></div>
 
       <div id="worldmap">
-        <input type="date" id="date-input" min="2020-01-15" max="2023-02-21">
+        <input type="date" id="date-input" min="2020-01-15" max="2023-02-21" />
         <button id="select-btn">Display selected date</button>
-        <input type="range" id="date-slider" min="0" max="164" step="1">
-
+        <input type="range" id="date-slider" min="0" max="164" step="1" />
 
         <div class="info"></div>
         <div class="displayDate"></div>
         <svg viewBox="0 0 1980 1080" preserveAspectRatio="xMidYMid meet">
-
           <g class="map"></g>
           <rect id="textBox">
             <title>Text Area</title>
@@ -101,18 +96,7 @@
         <svg id="legend"></svg>
       </div>
     </div>
-
-
-
-
   </div>
-
-
-
-
-
-
-
 </body>
 
 <script>
@@ -127,6 +111,5 @@
 <script type="text/javascript" src="./js/lineChart.js"></script>
 <script type="text/javascript" src="./js/cluster.js"></script>
 <script type="text/javascript" src="./js/tooltip.js"></script>
-
 
 </html>

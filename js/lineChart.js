@@ -83,9 +83,10 @@ function lineChart() {
   // add code to create and update the bar chart here
 
   d3.select("#buttonInfo").text(
-    "Select all the country you wish to compare to see how they fared againest Coivd-19. " +
-    "For example comparing UK to other close by European country would be a good comparision due to similarity in both location, wealth and population" +
-    "you can also hover over the line to see the total death number and where the country is on the world map"
+    "Select all the countries you wish to compare to see how they fared against Covid-19. " +
+    "For example, comparing the UK to other close by European countries would be a good comparison due to similarity in both location, wealth and population " +
+    " You can also hover over the line to see the total death number and where the country is on the world map"
+
   );
 
   const svg = d3.selectAll("#barChart");
